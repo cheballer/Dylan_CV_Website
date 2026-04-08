@@ -1,114 +1,201 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 
-const FloatingLines = dynamic(() => import('./FloatingLines'), {
-  ssr: false,
-  loading: () => null,
+/* ─── Mask-reveal animation ───────────────────────────────────
+   clipPath inset from bottom — the premium move used on agency
+   sites. Zero overflow-hidden clipping, text is never cut.
+──────────────────────────────────────────────────────────────── */
+const maskReveal = (delay = 0) => ({
+  initial: { clipPath: 'inset(0 0 100% 0)', opacity: 1 },
+  animate: {
+    clipPath: 'inset(0 0 0% 0)',
+    opacity: 1,
+    transition: { duration: 1.05, ease: [0.76, 0, 0.24, 1], delay },
+  },
+});
+
+const fade = (delay = 0) => ({
+  initial: { opacity: 0 },
+  animate: { opacity: 1, transition: { duration: 1, ease: 'easeOut', delay } },
 });
 
 export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex flex-col justify-between bg-bg overflow-hidden"
+      className="relative min-h-screen flex flex-col bg-bg"
+      style={{ paddingLeft: 0, paddingRight: 0 }}
     >
-      {/* ── FloatingLines — barely perceptible depth ── */}
-      <div className="absolute inset-0 z-0" style={{ pointerEvents: 'none', opacity: 0.35 }}>
-        <FloatingLines
-          linesGradient={['#0D0D06', '#111108', '#1A1A0C', '#111108', '#0D0D06']}
-          enabledWaves={['bottom']}
-          lineCount={[4]}
-          lineDistance={[18]}
-          animationSpeed={0.3}
-          bendRadius={4}
-          bendStrength={-0.15}
-          interactive={false}
-          parallax={false}
-          mixBlendMode="screen"
-        />
-      </div>
-
-      {/* ── Top row: role label ── */}
+      {/* ── Thin left vertical rule — editorial grid marker ── */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.2, delay: 0.2 }}
-        className="relative z-10 container-wide pt-32 md:pt-40"
+        {...fade(0.8)}
+        style={{
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          left: 'clamp(1.5rem, 4vw, 5rem)',
+          width: '1px',
+          background: 'var(--border)',
+          zIndex: 1,
+        }}
+      />
+
+      {/* ── Top meta row ── */}
+      <motion.div
+        {...fade(0.25)}
+        style={{
+          position: 'relative',
+          zIndex: 2,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          padding: 'clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 5vw, 5rem)',
+          paddingTop: 'calc(clamp(2rem, 5vw, 3.5rem) + 4rem)',
+        }}
       >
-        <p className="label" style={{ color: 'var(--text-2)', letterSpacing: '0.2em' }}>
-          Data Engineer&nbsp;&nbsp;·&nbsp;&nbsp;System Analyst&nbsp;&nbsp;·&nbsp;&nbsp;Johannesburg
-        </p>
+        <span className="label" style={{ paddingLeft: 'calc(clamp(1.5rem, 4vw, 5rem) + 1.5rem)' }}>
+          Portfolio — 2025
+        </span>
+        <span className="label" style={{ textAlign: 'right' }}>
+          Johannesburg, ZA
+        </span>
       </motion.div>
 
-      {/* ── Name — full-width, massive ── */}
-      <div className="relative z-10 container-wide flex-1 flex flex-col justify-center py-4">
-        <div className="overflow-hidden">
-          <motion.h1
-            initial={{ x: -80, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
-            className="font-display font-extrabold leading-[0.85] tracking-tight select-none"
+      {/* ── Name block ── */}
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          padding: '0 clamp(1rem, 3vw, 3.5rem)',
+          paddingBottom: '2rem',
+        }}
+      >
+        {/* DYLAN — filled, mask reveal */}
+        <motion.div {...maskReveal(0.1)}>
+          <h1
+            className="font-display font-extrabold select-none"
             style={{
-              fontSize: 'clamp(4.5rem, 14vw, 17rem)',
+              fontSize: 'clamp(4rem, 13.5vw, 16rem)',
+              lineHeight: 0.88,
+              letterSpacing: '-0.02em',
               color: 'var(--text)',
+              marginBottom: '0.06em',
             }}
           >
             DYLAN
-          </motion.h1>
-        </div>
-        <div className="overflow-hidden">
-          <motion.h1
-            initial={{ x: 80, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.18 }}
-            className="font-display font-extrabold leading-[0.85] tracking-tight select-none"
+          </h1>
+        </motion.div>
+
+        {/* CHEBALLAH — outlined, mask reveal */}
+        <motion.div {...maskReveal(0.28)}>
+          <h1
+            className="font-display font-extrabold select-none"
             style={{
-              fontSize: 'clamp(4.5rem, 14vw, 17rem)',
+              fontSize: 'clamp(4rem, 13.5vw, 16rem)',
+              lineHeight: 0.88,
+              letterSpacing: '-0.02em',
               color: 'transparent',
               WebkitTextStroke: '1.5px var(--text)',
             }}
           >
             CHEBALLAH
-          </motion.h1>
-        </div>
+          </h1>
+        </motion.div>
+
+        {/* Sub-row: role + year counter */}
+        <motion.div
+          {...fade(0.75)}
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            marginTop: 'clamp(1.5rem, 3vw, 2.5rem)',
+            paddingLeft: '0.1em',
+          }}
+        >
+          <p
+            className="font-display font-semibold"
+            style={{
+              fontSize: 'clamp(0.85rem, 1.5vw, 1.1rem)',
+              color: 'var(--text-2)',
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+            }}
+          >
+            Data Engineer&nbsp;&nbsp;/&nbsp;&nbsp;System Analyst
+          </p>
+          <span
+            className="label"
+            style={{ color: 'var(--text-3)', fontSize: '0.6rem' }}
+          >
+            Est. 2022
+          </span>
+        </motion.div>
       </div>
 
-      {/* ── Bottom row: tagline + CTAs ── */}
+      {/* ── Bottom CTA row ── */}
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.55 }}
-        className="relative z-10 container-wide pb-16 md:pb-20"
+        {...fade(1.0)}
+        style={{
+          position: 'relative',
+          zIndex: 2,
+          padding: '0 clamp(1.5rem, 5vw, 5rem) clamp(2rem, 5vw, 3.5rem)',
+        }}
       >
-        <div className="rule mb-8" />
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
-          <p
-            className="max-w-xs leading-relaxed"
-            style={{ color: 'var(--text-2)', fontSize: '0.875rem' }}
-          >
-            Building data systems that turn raw complexity
-            into clean, meaningful output.
-          </p>
-          <div className="flex items-center gap-6">
+        {/* Rule */}
+        <div className="rule" style={{ marginBottom: '1.75rem' }} />
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '2rem', flexWrap: 'wrap' }}>
+          {/* Scroll indicator */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div
+              style={{
+                width: '1px',
+                height: '2.5rem',
+                background: 'var(--text-3)',
+                overflow: 'hidden',
+                position: 'relative',
+              }}
+            >
+              <motion.div
+                animate={{ y: ['-100%', '200%'] }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: 'linear', delay: 1.5 }}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '50%',
+                  background: 'var(--text-2)',
+                }}
+              />
+            </div>
+            <span className="label" style={{ color: 'var(--text-3)' }}>Scroll</span>
+          </div>
+
+          {/* CTAs */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }}>
             <a
               href="#projects"
               className="btn-primary"
-              style={{ fontSize: '0.8rem', letterSpacing: '0.12em' }}
+              style={{ fontSize: '0.75rem', letterSpacing: '0.1em', textDecoration: 'none' }}
             >
               View Projects
             </a>
             <a
-              href="/cv.pdf"
-              download
+              href="#contact"
               style={{
-                fontSize: '0.8rem',
-                letterSpacing: '0.12em',
+                fontSize: '0.75rem',
+                letterSpacing: '0.1em',
                 color: 'var(--text-2)',
                 textDecoration: 'none',
-                borderBottom: '1px solid var(--text-2)',
-                paddingBottom: '1px',
+                borderBottom: '1px solid rgba(240,235,224,0.25)',
+                paddingBottom: '2px',
+                fontFamily: 'var(--font-sans)',
+                fontWeight: 500,
                 transition: 'color 0.2s, border-color 0.2s',
               }}
               onMouseEnter={e => {
@@ -117,10 +204,10 @@ export default function Hero() {
               }}
               onMouseLeave={e => {
                 e.currentTarget.style.color = 'var(--text-2)';
-                e.currentTarget.style.borderColor = 'var(--text-2)';
+                e.currentTarget.style.borderColor = 'rgba(240,235,224,0.25)';
               }}
             >
-              Download CV
+              Get in Touch
             </a>
           </div>
         </div>
