@@ -4,11 +4,10 @@ import { motion } from 'framer-motion';
 
 const EDUCATION = [
   {
-    degree:    'Bachelor of Computing',
-    school:    'Belgium Campus iTversity',
-    period:    '2022 — 2026',
-    status:    'In Progress',
-    highlight: true,
+    degree:   'Bachelor of Computing',
+    school:   'Belgium Campus iTversity',
+    period:   '2022 — 2026',
+    status:   'In Progress',
     subjects: [
       'Data Structures & Algorithms',
       'Database Management',
@@ -16,15 +15,13 @@ const EDUCATION = [
       'Mathematics & Statistics',
       'Machine Learning',
       'Web & Mobile Development',
-      'Project Management',
     ],
   },
   {
-    degree:  "National Senior Certificate (Matric)",
-    school:  'Hoërskool Hendrik Verwoerd',
-    period:  '2016 — 2020',
-    status:  'Completed',
-    highlight: false,
+    degree:   'National Senior Certificate',
+    school:   'Hoërskool Hendrik Verwoerd',
+    period:   '2016 — 2020',
+    status:   'Completed',
     subjects: [
       'Pure Mathematics',
       'Physical Sciences',
@@ -35,117 +32,65 @@ const EDUCATION = [
 ];
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] } },
+  hidden: { opacity: 0, y: 20 },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } },
 };
 
 const stagger = {
   hidden: {},
-  show:   { transition: { staggerChildren: 0.15 } },
+  show:   { transition: { staggerChildren: 0.1 } },
 };
 
 export default function Education() {
   return (
-    <section id="education" className="section-pad relative z-10">
+    <section id="education" className="section-pad border-t border-[var(--border)]">
       <div className="container-wide">
 
-        {/* Header */}
-        <motion.div
-          initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}
-          variants={stagger}
-          className="mb-14"
-        >
-          <motion.p variants={fadeUp} className="section-label mb-4">
-            05 — Background
-          </motion.p>
-          <motion.h2
-            variants={fadeUp}
-            className="font-display font-bold text-white leading-tight"
-            style={{ fontSize: 'clamp(2.25rem, 5vw, 4rem)' }}
-          >
-            <span className="gradient-text">Education</span>
-          </motion.h2>
-        </motion.div>
-
-        {/* Cards */}
         <motion.div
           initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }}
           variants={stagger}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
         >
+          {/* Header */}
+          <div className="flex items-baseline justify-between mb-14">
+            <motion.span variants={fadeUp} className="section-num">05</motion.span>
+            <motion.h2
+              variants={fadeUp}
+              className="font-display font-extrabold text-[var(--text)] tracking-tight leading-none"
+              style={{ fontSize: 'clamp(2.25rem, 5vw, 5rem)' }}
+            >
+              Education
+            </motion.h2>
+          </div>
+
+          {/* Entries */}
           {EDUCATION.map((edu) => (
             <motion.div
               key={edu.school}
               variants={fadeUp}
-              whileHover={{ y: -4 }}
-              transition={{ duration: 0.2 }}
-              className={`glass rounded-xl p-8 relative overflow-hidden ${
-                edu.highlight ? 'glass-accent' : ''
-              }`}
+              className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-10 py-10 border-t border-[var(--border)] first:border-t-0"
             >
-              {/* Corner accent for highlighted card */}
-              {edu.highlight && (
-                <div
-                  className="absolute top-0 right-0 w-36 h-36 pointer-events-none"
-                  style={{
-                    background:
-                      'radial-gradient(circle at 100% 0%, rgba(0,196,216,0.12) 0%, transparent 65%)',
-                  }}
-                />
-              )}
-
-              {/* Status */}
-              <div className="flex items-center justify-between mb-6">
-                <span
-                  className={`font-mono text-[0.58rem] tracking-[0.2em] uppercase px-2.5 py-1 rounded ${
-                    edu.highlight
-                      ? 'text-cyan bg-cyan/10 border border-cyan/25'
-                      : 'text-[var(--text-3)] bg-white/5 border border-white/10'
-                  }`}
-                >
-                  {edu.status}
-                </span>
-                <span className="font-mono text-[0.58rem] tracking-wider text-[var(--text-3)]">
-                  {edu.period}
-                </span>
+              {/* Left: period + status */}
+              <div className="md:col-span-1">
+                <p className="section-num mb-2">{edu.period}</p>
+                <p className="text-xs font-mono text-[var(--text-3)]">{edu.status}</p>
               </div>
 
-              {/* Degree */}
-              <h3 className="font-display font-bold text-white text-xl mb-1 leading-snug">
-                {edu.degree}
-              </h3>
-
-              {/* School */}
-              <p
-                className={`font-mono text-[0.65rem] tracking-[0.18em] uppercase mb-5 ${
-                  edu.highlight ? 'text-cyan' : 'text-[var(--text-3)]'
-                }`}
-              >
-                {edu.school}
-              </p>
-
-              <div className="data-line mb-5" />
-
-              {/* Subjects */}
-              <div>
-                <p className="font-mono text-[0.58rem] tracking-[0.2em] uppercase text-[var(--text-3)] mb-3">
-                  Subjects
-                </p>
+              {/* Right: degree + school + subjects */}
+              <div className="md:col-span-3">
+                <h3 className="font-display font-bold text-[var(--text)] text-xl leading-snug mb-1">
+                  {edu.degree}
+                </h3>
+                <p className="text-sm font-sans text-[var(--text-2)] mb-5">{edu.school}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {edu.subjects.map((s) => (
-                    <span
-                      key={s}
-                      className="font-sans text-xs text-[var(--text-2)] bg-white/[0.04] border border-white/[0.07] px-2.5 py-1 rounded"
-                    >
-                      {s}
-                    </span>
+                    <span key={s} className="tech-pill">{s}</span>
                   ))}
                 </div>
               </div>
             </motion.div>
           ))}
-        </motion.div>
 
+        </motion.div>
       </div>
     </section>
   );
