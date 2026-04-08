@@ -4,18 +4,15 @@ import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import StarBorder from './StarBorder';
 
-// Lazy-load both heavy WebGL libs client-only to prevent SSR/build errors
+// Both WebGL components lazy-loaded client-only — no SSR/build issues
 const FloatingLines = dynamic(() => import('./FloatingLines'), {
   ssr: false,
   loading: () => null,
 });
 
-// v4 of @splinetool/react-spline removed root export — must use /next path
-const Spline = dynamic(() => import('@splinetool/react-spline/next'), {
+const MetaBalls = dynamic(() => import('./MetaBalls'), {
   ssr: false,
-  loading: () => (
-    <div style={{ width: '100%', height: '100%', background: 'transparent' }} />
-  ),
+  loading: () => <div style={{ width: '100%', height: '100%' }} />,
 });
 
 const container = {
@@ -62,12 +59,11 @@ export default function Hero() {
 
           {/* Left: name + CTAs */}
           <div>
-            {/* Overline */}
             <motion.p variants={up} className="label mb-6 text-[var(--text-3)]">
               Data Engineer&nbsp;&nbsp;·&nbsp;&nbsp;System Analyst&nbsp;&nbsp;·&nbsp;&nbsp;Johannesburg
             </motion.p>
 
-            {/* Name — filled + stroked */}
+            {/* Name — filled + outlined */}
             <motion.h1
               variants={up}
               className="font-display font-extrabold leading-[0.88] tracking-tight mb-10 select-none"
@@ -78,10 +74,7 @@ export default function Hero() {
               </span>
               <span
                 className="block"
-                style={{
-                  color: 'transparent',
-                  WebkitTextStroke: '1.5px var(--text)',
-                }}
+                style={{ color: 'transparent', WebkitTextStroke: '1.5px var(--text)' }}
               >
                 CHEBALLAH
               </span>
@@ -104,21 +97,32 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* Right: Spline 3D model */}
+          {/* Right: MetaBalls WebGL — fluid interactive 3D blobs */}
           <motion.div
             variants={up}
-            className="hidden lg:block"
-            style={{ height: 'clamp(380px, 50vw, 560px)', position: 'relative' }}
+            className="hidden lg:flex items-center justify-center"
+            style={{ height: 'clamp(380px, 45vw, 540px)', position: 'relative' }}
           >
-            {/* Vignette so model fades into the dark bg */}
+            {/* Vignette: fades blob edges into dark background */}
             <div
               className="absolute inset-0 z-10 pointer-events-none"
               style={{
                 background:
-                  'radial-gradient(ellipse 90% 90% at 60% 50%, transparent 40%, #0B0B09 100%)',
+                  'radial-gradient(ellipse 80% 80% at 50% 50%, transparent 35%, #0B0B09 80%)',
               }}
             />
-            <Spline scene="https://prod.spline.design/PGTsRkEPCWOMObRx/scene.splinecode" />
+            <MetaBalls
+              color="#E8FF47"
+              cursorBallColor="#F0EBE0"
+              cursorBallSize={2}
+              ballCount={10}
+              animationSize={26}
+              enableMouseInteraction={true}
+              enableTransparency={true}
+              hoverSmoothness={0.12}
+              clumpFactor={0.85}
+              speed={0.22}
+            />
           </motion.div>
 
         </div>
