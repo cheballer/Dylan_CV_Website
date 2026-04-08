@@ -1,138 +1,151 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { motion } from 'framer-motion';
 
 const JOBS = [
   {
-    headline1: 'ENTERPRISE',
-    headline2: 'DATA',
-    company:   'Convergenc3',
-    date:      'Jan 2026 — Present',
-    role:      'Client Work — Hollard (Data)',
+    period:   'Jan 2026 — Present',
+    company:  'Convergenc3',
+    role:     'Technology Consultant — Enterprise Data (Hollard)',
+    type:     'Client Engagement',
     bullets: [
-      'Worked in a client environment on data tasks within a large enterprise system',
-      'Used SQL to query, clean, and analyse data across multiple databases',
-      'Investigated data issues affecting reporting and system outputs',
-      'Performed data validation to ensure accuracy and consistency',
-      'Collaborated with the Head of Data on ongoing data-related tasks',
+      'Deployed into a large enterprise environment, executing data tasks across multi-database systems',
+      'Used SQL to query, validate, and analyse data — investigating issues affecting reporting pipelines',
+      'Performed systematic data validation to maintain accuracy and consistency across sources',
+      'Collaborated directly with the Head of Data on ongoing platform requirements',
+      'Operated in a fast-paced, delivery-focused client environment with shifting priorities',
     ],
+    tags: ['SQL', 'Data Analysis', 'Enterprise Systems', 'Data Validation'],
   },
   {
-    headline1: 'AI',
-    headline2: 'BUILDER',
-    company:   'Convergenc3',
-    date:      'Aug 2025 — Present',
-    role:      'Internal Tooling — RAG System',
+    period:   'Aug 2025 — Present',
+    company:  'Convergenc3',
+    role:     'Technology Consultant — Internal RAG System',
+    type:     'Internal Tooling',
     bullets: [
-      'Built an internal tool to search and query company documents using a RAG approach',
-      'Allowed users to ask plain-language questions and retrieve relevant answers',
-      'Used a vector database to improve search accuracy over keyword-based search',
-      'Ran the model locally to ensure company data remained secure at all times',
-      'Cut manual search time significantly — especially during onboarding',
+      'Built an internal document intelligence tool using a Retrieval-Augmented Generation (RAG) approach',
+      'Enabled plain-language querying across company documentation, replacing manual search workflows',
+      'Implemented a vector database layer to improve semantic retrieval accuracy',
+      'Ran the inference model locally — ensuring company data never left the internal network',
+      'Measurably reduced onboarding search time for new team members',
     ],
+    tags: ['RAG', 'Vector DB', 'Python', 'LLM', 'Internal Tooling'],
   },
   {
-    headline1: 'PRODUCT',
-    headline2: 'ENGINEER',
-    company:   'Convergenc3',
-    date:      '2024 — 2025',
-    role:      'Internal Tooling — Employee Onboarding System',
+    period:   '2024 — 2025',
+    company:  'Convergenc3',
+    role:     'Technology Consultant — Employee Onboarding Platform',
+    type:     'Product Development',
     bullets: [
-      'Built a full employee onboarding system used across the business',
-      'Implemented role-based flows so users receive relevant tasks by their role',
-      'Developed frontend components in React, focusing on clean and usable flows',
-      'Used Power Automate for task tracking, notifications, and workflow automation',
-      'Managed application data using MongoDB with structured schemas',
+      'Designed and built a full employee onboarding system used across the organisation',
+      'Implemented role-based onboarding flows — users receive relevant tasks for their specific role',
+      'Developed React frontend components focused on clean UX and logical task progression',
+      'Used Power Automate to automate task tracking, notifications, and approval workflows',
+      'Managed application data in MongoDB with structured, well-defined schemas',
     ],
+    tags: ['React', 'MongoDB', 'Power Automate', 'Node.js', 'Product Dev'],
   },
 ];
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.25, 0.46, 0.45, 0.94] } },
+};
+
+const stagger = {
+  hidden: {},
+  show:   { transition: { staggerChildren: 0.15 } },
+};
+
 export default function Experience() {
-  const [current, setCurrent] = useState(0);
-  const [fading, setFading] = useState(false);
-
-  const goTo = useCallback((idx) => {
-    if (idx === current || fading) return;
-    setFading(true);
-    setTimeout(() => {
-      setCurrent(idx);
-      setFading(false);
-    }, 280);
-  }, [current, fading]);
-
-  const job = JOBS[current];
-
   return (
-    <section id="experience" className="exp">
+    <section id="experience" className="section-pad relative z-10">
+      <div className="container-wide">
 
-      {/* Header row */}
-      <div className="exp-header">
-        <span className="exp-section-label">// 02 — Experience</span>
-        <span className="exp-counter">
-          {String(current + 1).padStart(2, '0')} / {String(JOBS.length).padStart(2, '0')}
-        </span>
-      </div>
+        {/* Header */}
+        <motion.div
+          initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}
+          variants={stagger}
+          className="mb-14"
+        >
+          <motion.p variants={fadeUp} className="section-label mb-4">
+            02 — Mission Log
+          </motion.p>
+          <motion.h2
+            variants={fadeUp}
+            className="font-display font-bold text-white leading-tight"
+            style={{ fontSize: 'clamp(2.25rem, 5vw, 4rem)' }}
+          >
+            Work{' '}
+            <span className="gradient-text">Experience</span>
+          </motion.h2>
+        </motion.div>
 
-      {/* Ghost number */}
-      <div className="exp-ghost-num">{String(current + 1).padStart(2, '0')}</div>
+        {/* Timeline */}
+        <div className="relative pl-6 md:pl-8">
+          {/* Vertical line */}
+          <div className="timeline-line" />
 
-      {/* Slide */}
-      <div className={`exp-slide${fading ? ' fading' : ''}`}>
+          <motion.div
+            initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }}
+            variants={stagger}
+            className="flex flex-col gap-8"
+          >
+            {JOBS.map((job, i) => (
+              <motion.div key={i} variants={fadeUp} className="relative">
+                {/* Timeline node */}
+                <div className="timeline-node" />
 
-        {/* Left — big typographic headline */}
-        <div>
-          <p className="exp-left-label">Role</p>
-          <h2 className="exp-headline">
-            {job.headline1}
-            <br />
-            {job.headline2}
-          </h2>
-        </div>
+                {/* Card */}
+                <motion.div
+                  whileHover={{ x: 4 }}
+                  transition={{ duration: 0.2 }}
+                  className="glass glass-accent rounded-xl p-6 md:p-8 ml-4 group"
+                >
+                  {/* Top row */}
+                  <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
+                    <div>
+                      <span className="font-mono text-[0.58rem] tracking-[0.22em] uppercase text-[var(--text-3)] block mb-1">
+                        {job.type}
+                      </span>
+                      <h3 className="font-display font-bold text-white text-lg leading-snug">
+                        {job.role}
+                      </h3>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <span className="font-display font-bold text-sm text-cyan block">
+                        {job.company}
+                      </span>
+                      <span className="font-mono text-[0.6rem] tracking-wider text-[var(--text-3)]">
+                        {job.period}
+                      </span>
+                    </div>
+                  </div>
 
-        {/* Right — job details */}
-        <div className="exp-right">
-          <div className="exp-company">{job.company}</div>
-          <div className="exp-date">{job.date}</div>
-          <div className="exp-role">{job.role}</div>
-          <ul className="exp-bullets">
-            {job.bullets.map((b, i) => (
-              <li key={i}>{b}</li>
+                  <div className="data-line mb-5" />
+
+                  {/* Bullets */}
+                  <ul className="space-y-2.5 mb-5">
+                    {job.bullets.map((b, j) => (
+                      <li key={j} className="flex gap-3 text-sm text-[var(--text-2)] leading-relaxed">
+                        <span className="glow-dot mt-[0.45rem]" />
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Tech tags */}
+                  <div className="flex flex-wrap gap-2">
+                    {job.tags.map((t) => (
+                      <span key={t} className="tech-tag">{t}</span>
+                    ))}
+                  </div>
+                </motion.div>
+              </motion.div>
             ))}
-          </ul>
+          </motion.div>
         </div>
-
       </div>
-
-      {/* Slider navigation */}
-      <div className="exp-nav">
-        <button
-          className="arrow-btn"
-          onClick={() => goTo(current - 1)}
-          disabled={current === 0}
-          aria-label="Previous"
-        >
-          ←
-        </button>
-        <div className="dots">
-          {JOBS.map((_, i) => (
-            <button
-              key={i}
-              className={`dot-btn${i === current ? ' active' : ''}`}
-              onClick={() => goTo(i)}
-              aria-label={`Go to job ${i + 1}`}
-            />
-          ))}
-        </div>
-        <button
-          className="arrow-btn"
-          onClick={() => goTo(current + 1)}
-          disabled={current === JOBS.length - 1}
-          aria-label="Next"
-        >
-          →
-        </button>
-      </div>
-
     </section>
   );
 }

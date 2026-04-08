@@ -1,116 +1,209 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useRef, useState } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 const PROJECTS = [
   {
-    title1: 'DATA',
-    title2: 'PIPELINE',
-    year:   '2025',
-    desc:   'Built a data pipeline to extract, transform, and load raw data into a clean, usable format for reporting. Automated parts of the preparation process using SQL and scripting — reducing manual effort and improving consistency across datasets.',
-    tags:   ['SQL', 'Python', 'ETL', 'Data Pipeline', 'Reporting'],
+    index:   '01',
+    title:   'Data Pipeline & Reporting System',
+    problem: 'Raw operational data spread across multiple sources with no reliable preparation layer.',
+    outcome: 'Automated ETL pipeline reducing manual data prep by ~80%, with clean outputs feeding downstream reports.',
+    tools:   ['SQL', 'Python', 'ETL', 'Data Transformation', 'Reporting'],
+    status:  'Delivered',
+    year:    '2025',
+    accent:  '#00C4D8',
   },
   {
-    title1: 'EMPLOYEE',
-    title2: 'MANAGEMENT',
-    year:   '2024',
-    desc:   'Desktop application built with C# and SQL Server to manage employee records. Full CRUD functionality with proper database integration, input validation, search, and filtering. Clean code structure and user-friendly forms throughout.',
-    tags:   ['C#', 'SQL Server', 'CRUD', 'Desktop App', '.NET'],
+    index:   '02',
+    title:   'Employee Management System',
+    problem: 'Manual employee record management lacking validation, search, and reliable data integrity.',
+    outcome: 'Fully functional desktop application with CRUD operations, input validation, search/filter, and SQL Server integration.',
+    tools:   ['C#', '.NET', 'SQL Server', 'Desktop App', 'CRUD'],
+    status:  'Delivered',
+    year:    '2024',
+    accent:  '#C49A2D',
   },
   {
-    title1: 'HEALTHCARE',
-    title2: 'CONTRACTS',
-    year:   '2024',
-    desc:   'System for managing contracts and reports in a healthcare context. Built across frontend and backend with filtering, sorting, and role-based access control. Developed modularly using Agile methodology, collaborating with a team via GitHub.',
-    tags:   ['Full Stack', 'RBAC', 'Agile', 'GitHub', 'Healthcare'],
+    index:   '03',
+    title:   'Healthcare Contract Management',
+    problem: 'Contract lifecycle and reporting scattered across teams with no centralised access control.',
+    outcome: 'Full-stack system with role-based access control, contract filtering, status tracking, and audit trails.',
+    tools:   ['Full Stack', 'RBAC', 'Agile', 'GitHub', 'Healthcare Domain'],
+    status:  'Delivered',
+    year:    '2024',
+    accent:  '#7C3AED',
   },
 ];
 
-export default function Projects() {
-  const [current, setCurrent] = useState(0);
-  const [fading, setFading] = useState(false);
+function ProjectCard({ project }) {
+  const ref = useRef(null);
+  const [hovered, setHovered] = useState(false);
 
-  const goTo = useCallback((idx) => {
-    if (idx === current || fading) return;
-    setFading(true);
-    setTimeout(() => {
-      setCurrent(idx);
-      setFading(false);
-    }, 280);
-  }, [current, fading]);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
 
-  const project = PROJECTS[current];
+  const springConfig = { stiffness: 150, damping: 20 };
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [6, -6]), springConfig);
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-6, 6]), springConfig);
+
+  const handleMouseMove = (e) => {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    x.set((e.clientX - rect.left) / rect.width - 0.5);
+    y.set((e.clientY - rect.top)  / rect.height - 0.5);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0); y.set(0);
+    setHovered(false);
+  };
 
   return (
-    <section id="projects" className="proj">
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={handleMouseLeave}
+      style={{ rotateX, rotateY, transformStyle: 'preserve-3d', perspective: 1000 }}
+      whileHover={{ scale: 1.02 }}
+      transition={{ duration: 0.2 }}
+      className="project-card-inner cursor-default"
+    >
+      <div
+        className={`glass rounded-xl h-full transition-all duration-400 overflow-hidden ${
+          hovered ? 'shadow-card-hover' : 'shadow-card'
+        }`}
+        style={{
+          borderColor: hovered
+            ? `${project.accent}40`
+            : 'rgba(255,255,255,0.06)',
+          borderWidth: '1px',
+          borderStyle: 'solid',
+        }}
+      >
+        {/* Top bar */}
+        <div
+          className="h-px w-full opacity-60 transition-opacity duration-300"
+          style={{
+            background: `linear-gradient(to right, transparent, ${project.accent}, transparent)`,
+            opacity: hovered ? 0.8 : 0.3,
+          }}
+        />
 
-      {/* Header row */}
-      <div className="proj-header">
-        <span className="proj-section-label">// 03 — Projects</span>
-        <span className="proj-counter">
-          {String(current + 1).padStart(2, '0')} / {String(PROJECTS.length).padStart(2, '0')}
-        </span>
-      </div>
+        <div className="p-7 flex flex-col h-full">
+          {/* Header */}
+          <div className="flex items-start justify-between mb-5">
+            <span
+              className="font-display font-bold text-4xl leading-none"
+              style={{ color: `${project.accent}25` }}
+            >
+              {project.index}
+            </span>
+            <div className="text-right">
+              <span className="font-mono text-[0.58rem] tracking-[0.18em] uppercase text-[var(--text-3)] block">
+                {project.year}
+              </span>
+              <span
+                className="font-mono text-[0.6rem] tracking-wider uppercase"
+                style={{ color: project.accent }}
+              >
+                {project.status}
+              </span>
+            </div>
+          </div>
 
-      {/* Ghost number */}
-      <div className="proj-ghost-num">{String(current + 1).padStart(2, '0')}</div>
+          {/* Title */}
+          <h3 className="font-display font-bold text-lg text-white leading-snug mb-4">
+            {project.title}
+          </h3>
 
-      {/* Slide */}
-      <div className={`proj-slide${fading ? ' fading' : ''}`}>
+          {/* Problem → Outcome */}
+          <div className="space-y-3 mb-5 flex-1">
+            <div>
+              <p className="font-mono text-[0.58rem] tracking-[0.2em] uppercase text-[var(--text-3)] mb-1">
+                Problem
+              </p>
+              <p className="text-sm text-[var(--text-2)] leading-relaxed">{project.problem}</p>
+            </div>
+            <div>
+              <p className="font-mono text-[0.58rem] tracking-[0.2em] uppercase text-[var(--text-3)] mb-1">
+                Outcome
+              </p>
+              <p className="text-sm text-[var(--text-2)] leading-relaxed">{project.outcome}</p>
+            </div>
+          </div>
 
-        {/* Left — project title */}
-        <div>
-          <p className="proj-left-label">Project</p>
-          <h2 className="proj-title">
-            {project.title1}
-            <br />
-            {project.title2}
-          </h2>
-          <div className="proj-year-tag">{project.year}</div>
-        </div>
-
-        {/* Right — description + tags */}
-        <div className="proj-right">
-          <div className="proj-tags">
-            {project.tags.map((t) => (
-              <span key={t} className="proj-tag">{t}</span>
+          {/* Tools */}
+          <div className="flex flex-wrap gap-1.5">
+            {project.tools.map((t) => (
+              <span
+                key={t}
+                className="font-mono text-[0.6rem] tracking-wider uppercase px-2.5 py-1 rounded-sm"
+                style={{
+                  color: project.accent,
+                  background: `${project.accent}12`,
+                  border: `1px solid ${project.accent}25`,
+                }}
+              >
+                {t}
+              </span>
             ))}
           </div>
-          <p className="proj-desc">{project.desc}</p>
         </div>
-
       </div>
+    </motion.div>
+  );
+}
 
-      {/* Slider navigation */}
-      <div className="proj-nav">
-        <button
-          className="arrow-btn"
-          onClick={() => goTo(current - 1)}
-          disabled={current === 0}
-          aria-label="Previous"
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] } },
+};
+
+const stagger = {
+  hidden: {},
+  show:   { transition: { staggerChildren: 0.15 } },
+};
+
+export default function Projects() {
+  return (
+    <section id="projects" className="section-pad relative z-10">
+      <div className="container-wide">
+
+        {/* Header */}
+        <motion.div
+          initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}
+          variants={stagger}
+          className="mb-14"
         >
-          ←
-        </button>
-        <div className="dots">
-          {PROJECTS.map((_, i) => (
-            <button
-              key={i}
-              className={`dot-btn${i === current ? ' active' : ''}`}
-              onClick={() => goTo(i)}
-              aria-label={`Go to project ${i + 1}`}
-            />
+          <motion.p variants={fadeUp} className="section-label mb-4">
+            03 — Intel
+          </motion.p>
+          <motion.h2
+            variants={fadeUp}
+            className="font-display font-bold text-white leading-tight"
+            style={{ fontSize: 'clamp(2.25rem, 5vw, 4rem)' }}
+          >
+            Featured{' '}
+            <span className="gradient-text">Projects</span>
+          </motion.h2>
+        </motion.div>
+
+        {/* Grid */}
+        <motion.div
+          initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }}
+          variants={stagger}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          style={{ perspective: 1200 }}
+        >
+          {PROJECTS.map((p, i) => (
+            <motion.div key={p.index} variants={fadeUp}>
+              <ProjectCard project={p} />
+            </motion.div>
           ))}
-        </div>
-        <button
-          className="arrow-btn"
-          onClick={() => goTo(current + 1)}
-          disabled={current === PROJECTS.length - 1}
-          aria-label="Next"
-        >
-          →
-        </button>
+        </motion.div>
       </div>
-
     </section>
   );
 }

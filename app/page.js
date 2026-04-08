@@ -1,5 +1,5 @@
 import Nav from '@/components/Nav';
-import ScrollReveal from '@/components/ScrollReveal';
+import SplashCursor from '@/components/SplashCursor';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
 import Experience from '@/components/Experience';
@@ -11,8 +11,8 @@ import Contact from '@/components/Contact';
 export default function Page() {
   return (
     <>
+      <SplashCursor />
       <Nav />
-      <ScrollReveal />
       <main>
         <Hero />
         <About />
