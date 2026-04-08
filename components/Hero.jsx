@@ -2,11 +2,16 @@
 
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import FloatingLines from './FloatingLines';
 import StarBorder from './StarBorder';
 
-// Lazy-load Spline only on client — avoids SSR lag
-const Spline = dynamic(() => import('@splinetool/react-spline'), {
+// Lazy-load both heavy WebGL libs client-only to prevent SSR/build errors
+const FloatingLines = dynamic(() => import('./FloatingLines'), {
+  ssr: false,
+  loading: () => null,
+});
+
+// v4 of @splinetool/react-spline removed root export — must use /next path
+const Spline = dynamic(() => import('@splinetool/react-spline/next'), {
   ssr: false,
   loading: () => (
     <div style={{ width: '100%', height: '100%', background: 'transparent' }} />
