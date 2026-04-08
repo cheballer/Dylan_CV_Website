@@ -1,4 +1,5 @@
 import Nav from '@/components/Nav';
+import ScrollReveal from '@/components/ScrollReveal';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
 import Experience from '@/components/Experience';
@@ -11,6 +12,7 @@ export default function Page() {
   return (
     <>
       <Nav />
+      <ScrollReveal />
       <main>
         <Hero />
         <About />

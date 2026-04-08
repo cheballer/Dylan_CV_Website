@@ -153,33 +153,10 @@ a { color: inherit; text-decoration: none; }
   overflow: hidden;
 }
 
-.hero-ambient {
+.hero-particles {
   position: absolute;
   inset: 0;
   z-index: 0;
-  opacity: 0.5;
-}
-
-.hero-planet {
-  position: absolute;
-  right: -6%;
-  top: -5%;
-  width: 58%;
-  height: 110%;
-  z-index: 1;
-}
-
-.hero-fade {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background: linear-gradient(
-    to right,
-    var(--ink) 20%,
-    rgba(9, 9, 15, 0.55) 45%,
-    transparent 65%
-  );
-  pointer-events: none;
 }
 
 .hero-content {
@@ -987,8 +964,6 @@ a { color: inherit; text-decoration: none; }
 }
 
 @media (max-width: 768px) {
-  .hero-planet   { display: none; }
-  .hero-fade     { display: none; }
   .nav-left a:not(:first-child),
   .nav-right a:not(:last-child) { display: none; }
   .about-word, .about-word-ghost { font-size: clamp(2.75rem, 10vw, 5rem); }
