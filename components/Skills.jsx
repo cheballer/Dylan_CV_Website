@@ -21,15 +21,11 @@ const CATEGORIES = [
   },
 ];
 
-const fadeUp = {
+const up = {
   hidden: { opacity: 0, y: 20 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] } },
 };
-
-const stagger = {
-  hidden: {},
-  show:   { transition: { staggerChildren: 0.09 } },
-};
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.09 } } };
 
 export default function Skills() {
   return (
@@ -37,41 +33,54 @@ export default function Skills() {
       <div className="container-wide">
 
         <motion.div
-          initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }}
+          initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.08 }}
           variants={stagger}
         >
-          {/* Header */}
-          <div className="flex items-baseline justify-between mb-14">
-            <motion.span variants={fadeUp} className="section-num">04</motion.span>
-            <motion.h2
-              variants={fadeUp}
-              className="font-display font-extrabold text-[var(--text)] tracking-tight leading-none"
-              style={{ fontSize: 'clamp(2.25rem, 5vw, 5rem)' }}
-            >
-              Skills
-            </motion.h2>
-          </div>
+          {/* Section tag */}
+          <motion.p variants={up} className="label mb-12">04 / Skills</motion.p>
+
+          {/* Heading */}
+          <motion.h2
+            variants={up}
+            className="font-display font-extrabold text-[var(--text)] tracking-tight mb-16"
+            style={{ fontSize: 'clamp(2.5rem, 6vw, 7rem)', lineHeight: 0.92 }}
+          >
+            Stack
+          </motion.h2>
 
           {/* Category rows */}
-          {CATEGORIES.map((cat, i) => (
-            <motion.div
-              key={cat.label}
-              variants={fadeUp}
-              className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-10 py-7 border-t border-[var(--border)] first:border-t-0 items-start"
-            >
-              <p className="section-num md:col-span-1 pt-0.5">{cat.label}</p>
-              <div className="md:col-span-3 flex flex-wrap gap-2">
-                {cat.skills.map((skill) => (
-                  <span
-                    key={skill}
-                    className="text-sm font-sans text-[var(--text-2)] hover:text-[var(--text)] transition-colors duration-200 cursor-default"
+          <div>
+            {CATEGORIES.map((cat, i) => (
+              <motion.div
+                key={cat.label}
+                variants={up}
+                className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-10 py-8 border-t border-[var(--border)] items-baseline"
+              >
+                {/* Category name */}
+                <div className="md:col-span-3">
+                  <p
+                    className="font-display font-bold text-[var(--text)] tracking-tight"
+                    style={{ fontSize: 'clamp(1rem, 1.8vw, 1.35rem)' }}
                   >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-          ))}
+                    {cat.label}
+                  </p>
+                </div>
+
+                {/* Skills */}
+                <div className="md:col-span-9 flex flex-wrap gap-x-6 gap-y-2">
+                  {cat.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="font-sans text-[var(--text-2)] hover:text-[var(--text)] transition-colors duration-200 cursor-default"
+                      style={{ fontSize: '0.92rem' }}
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
 
         </motion.div>
       </div>

@@ -4,12 +4,12 @@ import { motion } from 'framer-motion';
 
 const container = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.08, delayChildren: 0.15 } },
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } },
 };
 
-const item = {
-  hidden: { opacity: 0, y: 24 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] } },
+const up = {
+  hidden: { opacity: 0, y: 30 },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
 };
 
 export default function Hero() {
@@ -24,31 +24,54 @@ export default function Hero() {
         animate="show"
         className="container-wide pb-16 md:pb-20 pt-28"
       >
-        {/* Overline */}
-        <motion.p variants={item} className="section-num mb-6">
-          Data Engineer · System Analyst · Johannesburg, ZA
+        {/* Overline label */}
+        <motion.p variants={up} className="label mb-7 text-[var(--text-3)]">
+          Data Engineer &nbsp;·&nbsp; System Analyst &nbsp;·&nbsp; Johannesburg, ZA
         </motion.p>
 
-        {/* Name — fills the width */}
+        {/* Name — filled + stroked */}
         <motion.h1
-          variants={item}
-          className="font-display font-extrabold text-[var(--text)] leading-[0.9] tracking-tight mb-10"
-          style={{ fontSize: 'clamp(4.5rem, 13.5vw, 16rem)' }}
+          variants={up}
+          className="font-display font-extrabold leading-[0.88] tracking-tight mb-10 select-none"
+          style={{ fontSize: 'clamp(4.5rem, 13.5vw, 17rem)' }}
         >
-          DYLAN<br />CHEBALLAH
+          {/* Filled line */}
+          <span
+            className="block"
+            style={{ color: 'var(--text)' }}
+          >
+            DYLAN
+          </span>
+          {/* Outlined/stroked line — graphic design technique, not decoration */}
+          <span
+            className="block"
+            style={{
+              color: 'transparent',
+              WebkitTextStroke: '1.5px var(--text)',
+            }}
+          >
+            CHEBALLAH
+          </span>
         </motion.h1>
 
-        {/* Bottom row: divider + bio + CTAs */}
-        <motion.div variants={item}>
+        {/* Divider + CTA row */}
+        <motion.div variants={up}>
           <div className="rule mb-8" />
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-            <p className="text-[var(--text-2)] text-sm max-w-xs leading-relaxed">
-              Building data systems that turn raw complexity into
-              clean, meaningful output.
+            <p
+              className="font-sans text-[var(--text-2)] leading-relaxed max-w-sm"
+              style={{ fontSize: '0.9rem' }}
+            >
+              Building data systems that turn raw complexity
+              into clean, meaningful output.
             </p>
             <div className="flex items-center gap-3 flex-shrink-0">
-              <a href="#projects" className="btn-primary">View Projects</a>
-              <a href="#contact"  className="btn-ghost">Contact</a>
+              <a href="#projects" className="btn-primary">
+                View Projects
+              </a>
+              <a href="/cv.pdf" download className="btn-ghost">
+                Download CV
+              </a>
             </div>
           </div>
         </motion.div>

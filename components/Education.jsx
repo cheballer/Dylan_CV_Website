@@ -22,24 +22,15 @@ const EDUCATION = [
     school:   'Hoërskool Hendrik Verwoerd',
     period:   '2016 — 2020',
     status:   'Completed',
-    subjects: [
-      'Pure Mathematics',
-      'Physical Sciences',
-      'Economics',
-      'Geography',
-    ],
+    subjects: ['Pure Mathematics', 'Physical Sciences', 'Economics', 'Geography'],
   },
 ];
 
-const fadeUp = {
+const up = {
   hidden: { opacity: 0, y: 20 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] } },
 };
-
-const stagger = {
-  hidden: {},
-  show:   { transition: { staggerChildren: 0.1 } },
-};
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } };
 
 export default function Education() {
   return (
@@ -47,48 +38,55 @@ export default function Education() {
       <div className="container-wide">
 
         <motion.div
-          initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }}
+          initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.08 }}
           variants={stagger}
         >
-          {/* Header */}
-          <div className="flex items-baseline justify-between mb-14">
-            <motion.span variants={fadeUp} className="section-num">05</motion.span>
-            <motion.h2
-              variants={fadeUp}
-              className="font-display font-extrabold text-[var(--text)] tracking-tight leading-none"
-              style={{ fontSize: 'clamp(2.25rem, 5vw, 5rem)' }}
-            >
-              Education
-            </motion.h2>
-          </div>
+          {/* Section tag */}
+          <motion.p variants={up} className="label mb-12">05 / Education</motion.p>
+
+          {/* Heading */}
+          <motion.h2
+            variants={up}
+            className="font-display font-extrabold text-[var(--text)] tracking-tight mb-16"
+            style={{ fontSize: 'clamp(2.5rem, 6vw, 7rem)', lineHeight: 0.92 }}
+          >
+            Background
+          </motion.h2>
 
           {/* Entries */}
-          {EDUCATION.map((edu) => (
-            <motion.div
-              key={edu.school}
-              variants={fadeUp}
-              className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-10 py-10 border-t border-[var(--border)] first:border-t-0"
-            >
-              {/* Left: period + status */}
-              <div className="md:col-span-1">
-                <p className="section-num mb-2">{edu.period}</p>
-                <p className="text-xs font-mono text-[var(--text-3)]">{edu.status}</p>
-              </div>
-
-              {/* Right: degree + school + subjects */}
-              <div className="md:col-span-3">
-                <h3 className="font-display font-bold text-[var(--text)] text-xl leading-snug mb-1">
-                  {edu.degree}
-                </h3>
-                <p className="text-sm font-sans text-[var(--text-2)] mb-5">{edu.school}</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {edu.subjects.map((s) => (
-                    <span key={s} className="tech-pill">{s}</span>
-                  ))}
+          <div>
+            {EDUCATION.map((edu) => (
+              <motion.div
+                key={edu.school}
+                variants={up}
+                className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 py-10 border-t border-[var(--border)]"
+              >
+                {/* Left: period + status */}
+                <div className="md:col-span-2">
+                  <p className="label mb-1.5">{edu.period}</p>
+                  <p className="label text-[var(--text-3)]">{edu.status}</p>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+
+                {/* Right: degree + school + subjects */}
+                <div className="md:col-span-10">
+                  <h3
+                    className="font-display font-bold text-[var(--text)] tracking-tight mb-1"
+                    style={{ fontSize: 'clamp(1.2rem, 2.5vw, 1.75rem)' }}
+                  >
+                    {edu.degree}
+                  </h3>
+                  <p className="text-[var(--text-2)] mb-5" style={{ fontSize: '0.88rem' }}>
+                    {edu.school}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {edu.subjects.map((s) => (
+                      <span key={s} className="tech-pill">{s}</span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
 
         </motion.div>
       </div>

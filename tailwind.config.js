@@ -7,9 +7,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        bg:      '#0A0A0A',
-        surface: '#141414',
-        accent:  '#00E5FF',
+        bg:      '#0B0B09',
+        surface: '#141410',
+        accent:  '#E8FF47',
       },
       fontFamily: {
         display: ['var(--font-display)', 'sans-serif'],
