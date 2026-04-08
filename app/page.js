@@ -1,4 +1,5 @@
-import Nav         from '@/components/Nav';
+import Nav        from '@/components/Nav';
+import ClickSpark  from '@/components/ClickSpark';
 import Hero        from '@/components/Hero';
 import About       from '@/components/About';
 import Experience  from '@/components/Experience';
@@ -9,7 +10,13 @@ import Contact     from '@/components/Contact';
 
 export default function Page() {
   return (
-    <>
+    <ClickSpark
+      sparkColor="#E8FF47"
+      sparkSize={8}
+      sparkRadius={18}
+      sparkCount={7}
+      duration={420}
+    >
       <Nav />
       <main>
         <Hero />
@@ -20,6 +27,6 @@ export default function Page() {
         <Education />
         <Contact />
       </main>
-    </>
+    </ClickSpark>
   );
 }
