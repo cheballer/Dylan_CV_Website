@@ -7,7 +7,7 @@ export default function Hero() {
   return (
     <section id="hero" className="hero">
 
-      {/* Ambient atmospheric color — the planetono palette */}
+      {/* Animated ambient color layer */}
       <div className="hero-ambient">
         <ColorBends
           colors={['#FFC737', '#EB3322', '#1a0055']}
@@ -29,23 +29,26 @@ export default function Hero() {
         <Spline scene="https://prod.spline.design/iCXjMnRUgZmLgBAl/scene.splinecode" />
       </div>
 
-      {/* Subtle dot-grid texture */}
-      <div className="hero-grid" />
-
-      {/* Fade planet into bg so left-side text stays readable */}
+      {/* Gradient fade — keeps left text readable */}
       <div className="hero-fade" />
 
-      {/* Main content */}
+      {/* Main content — bottom-left */}
       <div className="hero-content">
-        <div className="hero-tag">Available for opportunities</div>
+        <div className="hero-badge-row">
+          <span className="badge">
+            <span className="badge-dot" />
+            Available for opportunities
+          </span>
+        </div>
+
         <h1 className="hero-name">
-          <span>DYLAN</span>
-          <span className="acc">CHEBALLAH</span>
+          <span className="line1">DYLAN</span>
+          <span className="line2">CHEBALLAH</span>
         </h1>
-        <p className="hero-role">Data Engineer &amp; System Analyst &nbsp;·&nbsp; Johannesburg</p>
-        <div className="hero-ctas">
-          <a href="#experience" className="btn btn-primary">View My Work</a>
-          <a href="mailto:cheballahdylan02@gmail.com" className="btn btn-outline">Get In Touch</a>
+
+        <div className="hero-sub">
+          <p className="hero-role">Data Engineer &amp; System Analyst &nbsp;·&nbsp; Johannesburg</p>
+          <a href="#about" className="hero-cta">View My Work ↓</a>
         </div>
       </div>
 

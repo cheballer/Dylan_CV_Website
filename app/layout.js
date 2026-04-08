@@ -1,4 +1,4 @@
-import { Space_Grotesk, Space_Mono } from 'next/font/google';
+import { Space_Grotesk, Space_Mono, Anton } from 'next/font/google';
 import './globals.css';
 
 const sans = Space_Grotesk({
@@ -15,14 +15,21 @@ const mono = Space_Mono({
   display: 'swap',
 });
 
+const display = Anton({
+  subsets: ['latin'],
+  variable: '--font-display',
+  weight: '400',
+  display: 'swap',
+});
+
 export const metadata = {
   title: 'Dylan Cheballah — Data Engineer',
-  description: 'Data Engineer & System Analyst based in Johannesburg. SQL, Python, pipelines, enterprise data systems.',
+  description: 'Data Engineer & System Analyst based in Johannesburg. SQL, Python, enterprise data systems.',
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
+    <html lang="en" className={`${sans.variable} ${mono.variable} ${display.variable}`}>
       <body>{children}</body>
     </html>
   );

@@ -1,72 +1,138 @@
+'use client';
+
+import { useState, useCallback } from 'react';
+
 const JOBS = [
   {
-    date:    'Jan 2026 — Present',
-    company: 'Convergenc3',
-    role:    'Client Work — Hollard (Data)',
+    headline1: 'ENTERPRISE',
+    headline2: 'DATA',
+    company:   'Convergenc3',
+    date:      'Jan 2026 — Present',
+    role:      'Client Work — Hollard (Data)',
     bullets: [
-      'Worked in a client environment on data-related tasks within an enterprise system',
+      'Worked in a client environment on data tasks within a large enterprise system',
       'Used SQL to query, clean, and analyse data across multiple databases',
       'Investigated data issues affecting reporting and system outputs',
-      'Performed data validation to ensure data accuracy and consistency',
-      'Worked with senior members of the data team, including the Head of Data',
-      'Supported ongoing data-related tasks in a fast-paced, changing environment',
+      'Performed data validation to ensure accuracy and consistency',
+      'Collaborated with the Head of Data on ongoing data-related tasks',
     ],
   },
   {
-    date:    'Aug 2025 — Present',
-    company: 'Convergenc3',
-    role:    'Internal Tooling — RAG System',
+    headline1: 'AI',
+    headline2: 'BUILDER',
+    company:   'Convergenc3',
+    date:      'Aug 2025 — Present',
+    role:      'Internal Tooling — RAG System',
     bullets: [
       'Built an internal tool to search and query company documents using a RAG approach',
-      'Allowed users to ask questions in plain language and retrieve relevant answers',
+      'Allowed users to ask plain-language questions and retrieve relevant answers',
       'Used a vector database to improve search accuracy over keyword-based search',
-      'Ran the model locally to ensure company data remained secure and never exposed externally',
-      'Reduced time spent manually searching for information, especially during onboarding',
+      'Ran the model locally to ensure company data remained secure at all times',
+      'Cut manual search time significantly — especially during onboarding',
     ],
   },
   {
-    date:    '2024 — 2025',
-    company: 'Convergenc3',
-    role:    'Internal Tooling — Employee Onboarding System',
+    headline1: 'PRODUCT',
+    headline2: 'ENGINEER',
+    company:   'Convergenc3',
+    date:      '2024 — 2025',
+    role:      'Internal Tooling — Employee Onboarding System',
     bullets: [
-      'Developed an employee onboarding system used across the business for graduates and hires',
-      'Built role-based onboarding flows so users receive relevant tasks based on their role',
-      'Developed frontend components using React, focusing on usability and clean user flows',
-      'Used Power Automate to implement workflows for task tracking, notifications, and automation',
-      'Worked with MongoDB to store, structure, and manage application data',
+      'Built a full employee onboarding system used across the business',
+      'Implemented role-based flows so users receive relevant tasks by their role',
+      'Developed frontend components in React, focusing on clean and usable flows',
+      'Used Power Automate for task tracking, notifications, and workflow automation',
+      'Managed application data using MongoDB with structured schemas',
     ],
   },
 ];
 
 export default function Experience() {
+  const [current, setCurrent] = useState(0);
+  const [fading, setFading] = useState(false);
+
+  const goTo = useCallback((idx) => {
+    if (idx === current || fading) return;
+    setFading(true);
+    setTimeout(() => {
+      setCurrent(idx);
+      setFading(false);
+    }, 280);
+  }, [current, fading]);
+
+  const job = JOBS[current];
+
   return (
-    <section id="experience" className="section-outer">
-      <div className="section-inner">
+    <section id="experience" className="exp">
 
-        <p className="s-label">// 02 — Experience</p>
-        <h2 className="s-heading">
-          Where I&apos;ve<br />
-          <span className="acc">shipped things.</span>
-        </h2>
+      {/* Header row */}
+      <div className="exp-header">
+        <span className="exp-section-label">// 02 — Experience</span>
+        <span className="exp-counter">
+          {String(current + 1).padStart(2, '0')} / {String(JOBS.length).padStart(2, '0')}
+        </span>
+      </div>
 
-        <div className="timeline">
-          {JOBS.map((job, i) => (
-            <div key={i} className="t-row reveal">
-              <div className="t-meta">
-                <span className="t-date">{job.date}</span>
-                <span className="t-company">{job.company}</span>
-              </div>
-              <div className="t-body">
-                <h3>{job.role}</h3>
-                <ul className="t-bullets">
-                  {job.bullets.map((b, j) => <li key={j}>{b}</li>)}
-                </ul>
-              </div>
-            </div>
-          ))}
+      {/* Ghost number */}
+      <div className="exp-ghost-num">{String(current + 1).padStart(2, '0')}</div>
+
+      {/* Slide */}
+      <div className={`exp-slide${fading ? ' fading' : ''}`}>
+
+        {/* Left — big typographic headline */}
+        <div>
+          <p className="exp-left-label">Role</p>
+          <h2 className="exp-headline">
+            {job.headline1}
+            <br />
+            {job.headline2}
+          </h2>
+        </div>
+
+        {/* Right — job details */}
+        <div className="exp-right">
+          <div className="exp-company">{job.company}</div>
+          <div className="exp-date">{job.date}</div>
+          <div className="exp-role">{job.role}</div>
+          <ul className="exp-bullets">
+            {job.bullets.map((b, i) => (
+              <li key={i}>{b}</li>
+            ))}
+          </ul>
         </div>
 
       </div>
+
+      {/* Slider navigation */}
+      <div className="exp-nav">
+        <button
+          className="arrow-btn"
+          onClick={() => goTo(current - 1)}
+          disabled={current === 0}
+          aria-label="Previous"
+        >
+          ←
+        </button>
+        <div className="dots">
+          {JOBS.map((_, i) => (
+            <button
+              key={i}
+              className={`dot-btn${i === current ? ' active' : ''}`}
+              onClick={() => goTo(i)}
+              aria-label={`Go to job ${i + 1}`}
+            />
+          ))}
+        </div>
+        <button
+          className="arrow-btn"
+          onClick={() => goTo(current + 1)}
+          disabled={current === JOBS.length - 1}
+          aria-label="Next"
+        >
+          →
+        </button>
+      </div>
+
     </section>
   );
 }

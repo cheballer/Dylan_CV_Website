@@ -1,38 +1,38 @@
-const EDUCATION = [
-  {
-    degree:   'Bachelor of Computing',
-    school:   'Belgium Campus',
-    years:    '2022 — 2026',
-    subjects: 'Data Structures · Mathematics · Statistics · Database Management · Software Engineering · Web Development · Project Management · Machine Learning',
-  },
-  {
-    degree:   'Bachelors Pass (Matric)',
-    school:   'Hoërskool Hendrik Verwoerd',
-    years:    '2016 — 2020',
-    subjects: 'Pure Mathematics · Physics · Economics · Geography',
-  },
-];
-
 export default function Education() {
   return (
-    <section id="education" className="section-outer">
-      <div className="section-inner">
+    <section id="education" className="education">
 
-        <p className="s-label">// 05 — Education</p>
-        <h2 className="s-heading">
-          Where I<br />
-          <span className="acc">learned.</span>
-        </h2>
+      <p className="education-label">// 05 — Education</p>
 
-        <div className="edu-grid">
-          {EDUCATION.map((e) => (
-            <div key={e.school} className="edu-card reveal">
-              <div className="edu-degree">{e.degree}</div>
-              <div className="edu-school">{e.school}</div>
-              <div className="edu-years">{e.years}</div>
-              <div className="edu-subs">{e.subjects}</div>
-            </div>
-          ))}
+      <h2 className="education-heading">
+        Where I<br />
+        <span className="acc">learned.</span>
+      </h2>
+
+      <div className="edu-cards">
+
+        {/* Belgium Campus — featured (dark card) */}
+        <div className="edu-card-new featured">
+          <div className="edu-badge">Current ✦</div>
+          <div className="edu-degree-new">Bachelor of Computing</div>
+          <div className="edu-school-new">Belgium Campus iTversity</div>
+          <div className="edu-years-new">2022 — 2026</div>
+          <div className="edu-subjects">
+            Data Structures · Mathematics · Statistics · Database Management ·
+            Software Engineering · Web Development · Project Management ·
+            Machine Learning
+          </div>
+        </div>
+
+        {/* Matric */}
+        <div className="edu-card-new">
+          <span className="edu-spark">✦</span>
+          <div className="edu-degree-new">Bachelors Pass (Matric)</div>
+          <div className="edu-school-new">Hoërskool Hendrik Verwoerd</div>
+          <div className="edu-years-new">2016 — 2020</div>
+          <div className="edu-subjects">
+            Pure Mathematics · Physics · Economics · Geography
+          </div>
         </div>
 
       </div>
