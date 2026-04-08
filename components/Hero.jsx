@@ -1,12 +1,7 @@
 'use client';
 
-import dynamic from 'next/dynamic';
+import Spline from '@splinetool/react-spline/next';
 import ColorBends from './ColorBends';
-
-const Spline = dynamic(() => import('@splinetool/react-spline'), {
-  ssr: false,
-  loading: () => null,
-});
 
 export default function Hero() {
   return (
