@@ -2,159 +2,151 @@
 
 import { motion } from 'framer-motion';
 
-/* ─── Mask-reveal animation ───────────────────────────────────
-   clipPath inset from bottom — the premium move used on agency
-   sites. Zero overflow-hidden clipping, text is never cut.
-──────────────────────────────────────────────────────────────── */
+/* ─── Mask reveal — clip-path inset from bottom ─────────────── */
 const maskReveal = (delay = 0) => ({
-  initial: { clipPath: 'inset(0 0 100% 0)', opacity: 1 },
+  initial: { clipPath: 'inset(0 0 100% 0)' },
   animate: {
     clipPath: 'inset(0 0 0% 0)',
-    opacity: 1,
     transition: { duration: 1.05, ease: [0.76, 0, 0.24, 1], delay },
   },
 });
 
 const fade = (delay = 0) => ({
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 1, ease: 'easeOut', delay } },
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.9, ease: 'easeOut', delay } },
 });
 
 export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex flex-col bg-bg"
-      style={{ paddingLeft: 0, paddingRight: 0 }}
+      className="relative min-h-screen flex flex-col bg-bg overflow-hidden"
     >
-      {/* ── Thin left vertical rule — editorial grid marker ── */}
-      <motion.div
-        {...fade(0.8)}
-        style={{
-          position: 'absolute',
-          top: 0,
-          bottom: 0,
-          left: 'clamp(1.5rem, 4vw, 5rem)',
-          width: '1px',
-          background: 'var(--border)',
-          zIndex: 1,
-        }}
-      />
+      {/* ── Spline iframe — fills the section, remains interactive ── */}
+      <div
+        className="absolute inset-0"
+        style={{ zIndex: 1 }}
+        aria-hidden="true"
+      >
+        <iframe
+          src="https://my.spline.design/particles-8jDthVNMpg3LzzYz3EYo9JGF/"
+          frameBorder="0"
+          width="100%"
+          height="100%"
+          loading="eager"
+          style={{
+            width: '100%',
+            height: '100%',
+            border: 0,
+            display: 'block',
+          }}
+        />
+        {/* Darkening overlay so name stays legible — pointer-events none so hover still reaches iframe */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            pointerEvents: 'none',
+            background:
+              'linear-gradient(180deg, rgba(11,11,9,0.55) 0%, rgba(11,11,9,0.2) 35%, rgba(11,11,9,0.2) 65%, rgba(11,11,9,0.85) 100%)',
+          }}
+        />
+      </div>
 
       {/* ── Top meta row ── */}
       <motion.div
         {...fade(0.25)}
+        className="relative flex items-start justify-between"
         style={{
-          position: 'relative',
-          zIndex: 2,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          padding: 'clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 5vw, 5rem)',
-          paddingTop: 'calc(clamp(2rem, 5vw, 3.5rem) + 4rem)',
+          zIndex: 3,
+          padding: 'clamp(5rem, 8vw, 7rem) var(--pad) 0',
+          pointerEvents: 'none',
         }}
       >
-        <span className="label" style={{ paddingLeft: 'calc(clamp(1.5rem, 4vw, 5rem) + 1.5rem)' }}>
-          Portfolio — 2025
-        </span>
+        <span className="label">Portfolio / 2025</span>
         <span className="label" style={{ textAlign: 'right' }}>
           Johannesburg, ZA
         </span>
       </motion.div>
 
-      {/* ── Name block ── */}
+      {/* ── Name block — pointer-events: none so Spline receives mouse ── */}
       <div
+        className="relative flex flex-col justify-center flex-1"
         style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          padding: '0 clamp(1rem, 3vw, 3.5rem)',
-          paddingBottom: '2rem',
+          zIndex: 3,
+          padding: '0 var(--pad)',
+          pointerEvents: 'none',
         }}
       >
-        {/* DYLAN — filled, mask reveal */}
-        <motion.div {...maskReveal(0.1)}>
+        <motion.div {...maskReveal(0.15)}>
           <h1
-            className="font-display font-extrabold select-none"
+            className="font-sans select-none"
             style={{
-              fontSize: 'clamp(4rem, 13.5vw, 16rem)',
-              lineHeight: 0.88,
-              letterSpacing: '-0.02em',
+              fontSize: 'clamp(3rem, 11vw, 13rem)',
+              fontWeight: 800,
+              lineHeight: 0.9,
+              letterSpacing: '-0.035em',
               color: 'var(--text)',
-              marginBottom: '0.06em',
             }}
           >
-            DYLAN
+            Dylan
           </h1>
         </motion.div>
 
-        {/* CHEBALLAH — outlined, mask reveal */}
-        <motion.div {...maskReveal(0.28)}>
+        <motion.div {...maskReveal(0.3)}>
           <h1
-            className="font-display font-extrabold select-none"
+            className="font-sans select-none"
             style={{
-              fontSize: 'clamp(4rem, 13.5vw, 16rem)',
-              lineHeight: 0.88,
-              letterSpacing: '-0.02em',
-              color: 'transparent',
-              WebkitTextStroke: '1.5px var(--text)',
+              fontSize: 'clamp(3rem, 11vw, 13rem)',
+              fontWeight: 300,
+              lineHeight: 0.9,
+              letterSpacing: '-0.035em',
+              color: 'var(--text)',
+              fontStyle: 'italic',
             }}
           >
-            CHEBALLAH
+            Cheballah
           </h1>
         </motion.div>
 
-        {/* Sub-row: role + year counter */}
         <motion.div
-          {...fade(0.75)}
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-            marginTop: 'clamp(1.5rem, 3vw, 2.5rem)',
-            paddingLeft: '0.1em',
-          }}
+          {...fade(0.85)}
+          className="flex items-end justify-between flex-wrap gap-4"
+          style={{ marginTop: 'clamp(1.25rem, 2.5vw, 2rem)' }}
         >
           <p
-            className="font-display font-semibold"
+            className="font-sans"
             style={{
-              fontSize: 'clamp(0.85rem, 1.5vw, 1.1rem)',
+              fontSize: 'var(--fs-sm)',
               color: 'var(--text-2)',
-              letterSpacing: '0.06em',
+              letterSpacing: '0.04em',
               textTransform: 'uppercase',
+              fontWeight: 500,
             }}
           >
-            Data Engineer&nbsp;&nbsp;/&nbsp;&nbsp;System Analyst
+            Data Engineer &nbsp;·&nbsp; System Analyst
           </p>
-          <span
-            className="label"
-            style={{ color: 'var(--text-3)', fontSize: '0.6rem' }}
-          >
-            Est. 2022
-          </span>
+          <span className="label">Est. 2022</span>
         </motion.div>
       </div>
 
-      {/* ── Bottom CTA row ── */}
+      {/* ── Bottom row: scroll cue + CTAs ── */}
       <motion.div
-        {...fade(1.0)}
+        {...fade(1.05)}
+        className="relative"
         style={{
-          position: 'relative',
-          zIndex: 2,
-          padding: '0 clamp(1.5rem, 5vw, 5rem) clamp(2rem, 5vw, 3.5rem)',
+          zIndex: 3,
+          padding: '0 var(--pad) clamp(2rem, 4vw, 3rem)',
+          pointerEvents: 'none',
         }}
       >
-        {/* Rule */}
-        <div className="rule" style={{ marginBottom: '1.75rem' }} />
-
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '2rem', flexWrap: 'wrap' }}>
-          {/* Scroll indicator */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div className="rule" style={{ marginBottom: '1.25rem' }} />
+        <div className="flex justify-between items-end flex-wrap gap-4">
+          <div className="flex items-center gap-3">
             <div
               style={{
                 width: '1px',
-                height: '2.5rem',
+                height: '2rem',
                 background: 'var(--text-3)',
                 overflow: 'hidden',
                 position: 'relative',
@@ -169,43 +161,28 @@ export default function Hero() {
                   left: 0,
                   width: '100%',
                   height: '50%',
-                  background: 'var(--text-2)',
+                  background: 'var(--accent)',
                 }}
               />
             </div>
-            <span className="label" style={{ color: 'var(--text-3)' }}>Scroll</span>
+            <span className="label">Scroll</span>
           </div>
 
-          {/* CTAs */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }}>
-            <a
-              href="#projects"
-              className="btn-primary"
-              style={{ fontSize: '0.75rem', letterSpacing: '0.1em', textDecoration: 'none' }}
-            >
-              View Projects
+          <div className="flex items-center gap-6" style={{ pointerEvents: 'auto' }}>
+            <a href="#projects" className="btn-primary">
+              View Work
             </a>
             <a
               href="#contact"
+              className="label"
               style={{
-                fontSize: '0.75rem',
-                letterSpacing: '0.1em',
-                color: 'var(--text-2)',
-                textDecoration: 'none',
-                borderBottom: '1px solid rgba(240,235,224,0.25)',
+                color: 'var(--text)',
+                borderBottom: '1px solid var(--text-3)',
                 paddingBottom: '2px',
-                fontFamily: 'var(--font-sans)',
-                fontWeight: 500,
-                transition: 'color 0.2s, border-color 0.2s',
+                transition: 'border-color 0.2s',
               }}
-              onMouseEnter={e => {
-                e.currentTarget.style.color = 'var(--text)';
-                e.currentTarget.style.borderColor = 'var(--text)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.color = 'var(--text-2)';
-                e.currentTarget.style.borderColor = 'rgba(240,235,224,0.25)';
-              }}
+              onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--accent)')}
+              onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--text-3)')}
             >
               Get in Touch
             </a>

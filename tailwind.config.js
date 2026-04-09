@@ -12,9 +12,9 @@ module.exports = {
         accent:  '#E8FF47',
       },
       fontFamily: {
-        display: ['var(--font-display)', 'sans-serif'],
-        sans:    ['var(--font-sans)',    'sans-serif'],
-        mono:    ['var(--font-mono)',    'monospace'],
+        display: ['var(--font-sans)', 'sans-serif'],
+        sans:    ['var(--font-sans)', 'sans-serif'],
+        mono:    ['var(--font-mono)', 'monospace'],
       },
     },
   },

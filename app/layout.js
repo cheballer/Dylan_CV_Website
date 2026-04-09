@@ -1,24 +1,17 @@
-import { Syne, Space_Grotesk, Space_Mono } from 'next/font/google';
+import { Urbanist, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 
-const display = Syne({
-  subsets: ['latin'],
-  variable: '--font-display',
-  weight: ['400', '500', '600', '700', '800'],
-  display: 'swap',
-});
-
-const sans = Space_Grotesk({
+const urbanist = Urbanist({
   subsets: ['latin'],
   variable: '--font-sans',
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
   display: 'swap',
 });
 
-const mono = Space_Mono({
+const mono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
-  weight: ['400', '700'],
+  weight: ['400', '500'],
   display: 'swap',
 });
 
@@ -39,7 +32,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${display.variable} ${sans.variable} ${mono.variable}`}
+      className={`${urbanist.variable} ${mono.variable}`}
     >
       <body>{children}</body>
     </html>

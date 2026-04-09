@@ -27,23 +27,38 @@ export default function Nav() {
 
   return (
     <motion.header
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5, delay: 0.2 }}
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 0.1 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-bg/95 backdrop-blur-sm border-b border-[var(--border)]'
-          : ''
+        scrolled ? 'bg-bg/85 backdrop-blur-md border-b border-[var(--border)]' : ''
       }`}
     >
-      <div className="container-wide flex items-center justify-between h-16">
-
+      <div
+        className="flex items-center justify-between"
+        style={{
+          padding: '1.1rem var(--pad)',
+          height: '4rem',
+          maxWidth: '1240px',
+          margin: '0 auto',
+        }}
+      >
         <a
           href="#hero"
           onClick={(e) => go(e, '#hero')}
-          className="font-display font-bold text-sm tracking-widest text-[var(--text)] hover:text-accent transition-colors duration-200"
+          className="flex items-center gap-2"
+          style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: '0.82rem',
+            fontWeight: 700,
+            letterSpacing: '0.14em',
+            color: 'var(--text)',
+            textTransform: 'uppercase',
+          }}
         >
-          DC.
+          <span>Dylan</span>
+          <span style={{ color: 'var(--accent)' }}>/</span>
+          <span style={{ color: 'var(--text-2)' }}>DC</span>
         </a>
 
         <nav className="hidden md:flex items-center gap-8">
@@ -62,11 +77,21 @@ export default function Nav() {
         <a
           href="/cv.pdf"
           download
-          className="hidden md:inline-flex items-center gap-1.5 text-xs font-sans text-[var(--text-2)] hover:text-[var(--text)] transition-colors duration-200 tracking-wide"
+          className="hidden md:inline-flex items-center gap-1.5"
+          style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: '0.7rem',
+            fontWeight: 500,
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            color: 'var(--text-2)',
+            transition: 'color 0.2s',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text)')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-2)')}
         >
-          Resume <span className="text-[var(--text-3)]">↓</span>
+          Resume <span style={{ color: 'var(--text-3)' }}>↓</span>
         </a>
-
       </div>
     </motion.header>
   );

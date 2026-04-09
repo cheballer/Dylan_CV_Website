@@ -4,18 +4,22 @@ import { motion } from 'framer-motion';
 
 const CATEGORIES = [
   {
+    num:    '01',
     label:  'Data Engineering',
     skills: ['SQL', 'ETL Pipelines', 'Data Cleaning', 'Data Validation', 'Data Analysis', 'RAG Systems'],
   },
   {
+    num:    '02',
     label:  'Languages',
     skills: ['Python', 'C#', 'JavaScript', 'Java'],
   },
   {
+    num:    '03',
     label:  'Databases',
     skills: ['SQL Server', 'MongoDB', 'Vector Databases'],
   },
   {
+    num:    '04',
     label:  'Platforms & Tools',
     skills: ['React', 'Power Automate', '.NET', 'GitHub', 'Machine Learning'],
   },
@@ -25,63 +29,80 @@ const up = {
   hidden: { opacity: 0, y: 20 },
   show:   { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] } },
 };
-const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.09 } } };
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 
 export default function Skills() {
   return (
     <section id="skills" className="section-pad border-t border-[var(--border)]">
       <div className="container-wide">
-
         <motion.div
-          initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.08 }}
+          initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.06 }}
           variants={stagger}
         >
-          {/* Section tag */}
-          <motion.p variants={up} className="label mb-12">04 / Skills</motion.p>
+          <motion.div variants={up} className="section-num mb-10">04 &nbsp;/&nbsp; Skills</motion.div>
 
-          {/* Heading */}
-          <motion.h2
-            variants={up}
-            className="font-display font-extrabold text-[var(--text)] tracking-tight mb-16"
-            style={{ fontSize: 'clamp(2.5rem, 6vw, 7rem)', lineHeight: 0.92 }}
-          >
-            Stack
-          </motion.h2>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-16">
+            <motion.h2 variants={up} className="h-section lg:col-span-4">Stack</motion.h2>
+            <motion.p
+              variants={up}
+              className="lg:col-span-8"
+              style={{ fontSize: 'var(--fs-md)', color: 'var(--text-2)', lineHeight: 1.6, maxWidth: '52ch' }}
+            >
+              Tools I reach for day-to-day — data engineering core, plus languages and platforms as needed.
+            </motion.p>
+          </div>
 
-          {/* Category rows */}
-          <div>
-            {CATEGORIES.map((cat, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {CATEGORIES.map((cat) => (
               <motion.div
                 key={cat.label}
                 variants={up}
-                className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-10 py-8 border-t border-[var(--border)] items-baseline"
+                whileHover={{ y: -4 }}
+                transition={{ duration: 0.4 }}
+                className="card"
               >
-                {/* Category name */}
-                <div className="md:col-span-3">
-                  <p
-                    className="font-display font-bold text-[var(--text)] tracking-tight"
-                    style={{ fontSize: 'clamp(1rem, 1.8vw, 1.35rem)' }}
+                <div className="flex items-baseline gap-3 mb-4">
+                  <span
+                    className="font-mono"
+                    style={{
+                      fontSize: 'var(--fs-xs)',
+                      color: 'var(--text-3)',
+                      letterSpacing: '0.12em',
+                    }}
+                  >
+                    {cat.num}
+                  </span>
+                  <h3
+                    style={{
+                      fontSize: 'var(--fs-lg)',
+                      fontWeight: 700,
+                      color: 'var(--text)',
+                      letterSpacing: '-0.015em',
+                    }}
                   >
                     {cat.label}
-                  </p>
+                  </h3>
                 </div>
-
-                {/* Skills */}
-                <div className="md:col-span-9 flex flex-wrap gap-x-6 gap-y-2">
-                  {cat.skills.map((skill) => (
+                <div className="rule mb-4" />
+                <div className="flex flex-wrap gap-x-5 gap-y-2">
+                  {cat.skills.map((s) => (
                     <span
-                      key={skill}
-                      className="font-sans text-[var(--text-2)] hover:text-[var(--text)] transition-colors duration-200 cursor-default"
-                      style={{ fontSize: '0.92rem' }}
+                      key={s}
+                      style={{
+                        color: 'var(--text-2)',
+                        fontSize: 'var(--fs-base)',
+                        fontWeight: 500,
+                        transition: 'color 0.2s',
+                      }}
+                      className="hover:text-[var(--text)]"
                     >
-                      {skill}
+                      {s}
                     </span>
                   ))}
                 </div>
               </motion.div>
             ))}
           </div>
-
         </motion.div>
       </div>
     </section>
