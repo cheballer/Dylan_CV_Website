@@ -3,76 +3,82 @@
 import { motion } from 'framer-motion';
 
 const up = {
-  hidden: { opacity: 0, y: 20 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
+  hidden: { opacity: 0, y: 18 },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
 };
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 
 export default function Contact() {
   return (
-    <section id="contact" className="section-pad border-t border-[var(--border)]">
+    <section id="contact" className="section-pad" style={{ borderTop: '1px solid var(--border)' }}>
       <div className="container-wide">
         <motion.div
-          initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.12 }}
+          initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }}
           variants={stagger}
         >
-          <motion.div variants={up} className="section-num mb-10">06 &nbsp;/&nbsp; Contact</motion.div>
+          <motion.div variants={up} className="section-num" style={{ marginBottom: '3rem' }}>
+            06 / Contact
+          </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14">
-            <motion.h2 variants={up} className="h-section lg:col-span-4">Get in Touch</motion.h2>
-            <motion.p
-              variants={up}
-              className="lg:col-span-8"
-              style={{
-                fontSize: 'clamp(1.1rem, 1.8vw, 1.5rem)',
-                lineHeight: 1.4,
-                letterSpacing: '-0.01em',
-                color: 'var(--text)',
-                fontWeight: 500,
-                maxWidth: '32ch',
-              }}
-            >
-              Have a project or role in mind?
-              <span style={{ color: 'var(--text-2)' }}> Let&apos;s talk.</span>
-            </motion.p>
-          </div>
+          {/* Quote-style heading */}
+          <motion.p
+            variants={up}
+            style={{
+              fontFamily: 'var(--font-display), serif',
+              fontSize: 'clamp(2rem, 5vw, 5.5rem)',
+              fontWeight: 300,
+              fontStyle: 'italic',
+              letterSpacing: '-0.02em',
+              lineHeight: 1.05,
+              color: 'var(--text)',
+              maxWidth: '18ch',
+              marginBottom: 'clamp(3rem, 5vw, 5rem)',
+            }}
+          >
+            Ready for the next floor?
+          </motion.p>
 
-          {/* Email as the hero moment */}
+          {/* Email — large interactive */}
           <motion.a
             variants={up}
             href="mailto:cheballahdylan02@gmail.com"
-            className="block group"
             style={{
-              fontSize: 'clamp(1.5rem, 5vw, 4.5rem)',
+              display: 'inline-block',
+              fontFamily: 'var(--font-sans), sans-serif',
+              fontSize: 'clamp(1.1rem, 3.5vw, 3.5rem)',
               fontWeight: 700,
-              letterSpacing: '-0.03em',
+              letterSpacing: '-0.02em',
               lineHeight: 1,
               color: 'var(--text)',
-              marginBottom: '3rem',
+              marginBottom: 'clamp(3rem, 5vw, 5rem)',
               wordBreak: 'break-all',
-              transition: 'color 0.25s ease',
-              display: 'inline-block',
-              paddingBottom: '0.5rem',
               borderBottom: '1px solid var(--border-2)',
+              paddingBottom: '0.5rem',
+              transition: 'opacity 0.25s ease',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text)')}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.55')}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
           >
-            cheballahdylan02@gmail.com <span style={{ color: 'var(--text-3)', fontSize: '0.5em' }}>→</span>
+            cheballahdylan02@gmail.com
           </motion.a>
 
-          <div className="rule mb-8" />
+          <div className="rule" style={{ marginBottom: '2.5rem' }} />
 
-          {/* Footer */}
+          {/* Footer row */}
           <motion.div
             variants={up}
-            className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5"
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '1.5rem',
+            }}
           >
-            <div className="flex items-center gap-6">
+            <div style={{ display: 'flex', gap: '2rem' }}>
               {[
                 { label: 'LinkedIn', href: 'https://linkedin.com/in/dylancheballah' },
                 { label: 'GitHub',   href: 'https://github.com/cheballer'           },
-                { label: 'Email',    href: 'mailto:cheballahdylan02@gmail.com'      },
               ].map(({ label, href }) => (
                 <a
                   key={label}
@@ -88,7 +94,9 @@ export default function Contact() {
                 </a>
               ))}
             </div>
-            <p className="label">© 2026 Dylan Cheballah</p>
+            <p className="label" style={{ color: 'var(--text-3)' }}>
+              © 2026 Dylan Cheballah. Ascending.
+            </p>
           </motion.div>
         </motion.div>
       </div>

@@ -43,17 +43,15 @@ const INTERNAL = [
 ];
 
 const up = {
-  hidden: { opacity: 0, y: 20 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] } },
+  hidden: { opacity: 0, y: 18 },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
 };
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 
 function Bullet({ text }) {
   return (
-    <li className="flex gap-3" style={{ color: 'var(--text-2)', fontSize: 'var(--fs-base)', lineHeight: 1.6 }}>
-      <span style={{ color: 'var(--accent)', marginTop: '0.6em', flexShrink: 0 }}>
-        <span style={{ display: 'inline-block', width: '0.75rem', height: '1px', background: 'var(--accent)' }} />
-      </span>
+    <li style={{ display: 'flex', gap: '0.85rem', color: 'var(--text-2)', fontSize: 'var(--fs-base)', lineHeight: 1.65 }}>
+      <span style={{ color: 'var(--text-3)', flexShrink: 0, marginTop: '0.55em', fontFamily: 'monospace' }}>—</span>
       <span>{text}</span>
     </li>
   );
@@ -61,130 +59,112 @@ function Bullet({ text }) {
 
 export default function Experience() {
   return (
-    <section id="experience" className="section-pad border-t border-[var(--border)]">
+    <section id="experience" className="section-pad" style={{ borderTop: '1px solid var(--border)' }}>
       <div className="container-wide">
         <motion.div
-          initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.06 }}
+          initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }}
           variants={stagger}
         >
-          <motion.div variants={up} className="section-num mb-10">02 &nbsp;/&nbsp; Experience</motion.div>
+          <motion.div variants={up} className="section-num" style={{ marginBottom: '3rem' }}>
+            02 / Experience
+          </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-16">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2.5rem', marginBottom: '4rem' }}
+            className="lg:grid-cols-12">
             <motion.h2 variants={up} className="h-section lg:col-span-4">Work</motion.h2>
-            <motion.p
-              variants={up}
-              className="lg:col-span-8"
-              style={{ fontSize: 'var(--fs-md)', color: 'var(--text-2)', lineHeight: 1.6, maxWidth: '52ch' }}
-            >
-              A mix of client-facing enterprise data work and internal tooling built from scratch.
+            <motion.p variants={up} className="lg:col-span-8"
+              style={{ fontSize: 'var(--fs-md)', color: 'var(--text-2)', lineHeight: 1.7, maxWidth: '52ch' }}>
+              Client-facing enterprise data engineering alongside internal tooling built from scratch.
             </motion.p>
           </div>
 
-          {/* Hollard — feature card */}
+          {/* Hollard feature */}
           <motion.article
             variants={up}
-            whileHover={{ y: -4 }}
+            whileHover={{ y: -3 }}
             transition={{ duration: 0.4 }}
-            className="card mb-6"
-            style={{ padding: 'clamp(1.5rem, 3vw, 2.5rem)' }}
+            className="card"
+            style={{ marginBottom: '1.5rem', padding: 'clamp(1.5rem, 3vw, 2.5rem)' }}
           >
-            <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', marginBottom: '1.25rem' }}>
               <div>
-                <span className="label" style={{ color: 'var(--text-3)' }}>{HOLLARD.period}</span>
+                <p className="label" style={{ marginBottom: '0.6rem' }}>{HOLLARD.period}</p>
                 <h3
-                  className="font-sans mt-2"
                   style={{
-                    fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
-                    fontWeight: 700,
+                    fontFamily: 'var(--font-display), serif',
+                    fontSize: 'clamp(1.75rem, 3.5vw, 3rem)',
+                    fontWeight: 600,
+                    fontStyle: 'italic',
                     letterSpacing: '-0.02em',
-                    lineHeight: 1.1,
+                    lineHeight: 1.05,
                     color: 'var(--text)',
                   }}
                 >
                   {HOLLARD.client}
                 </h3>
-                <p className="label mt-2">{HOLLARD.via}</p>
+                <p className="label" style={{ marginTop: '0.4rem' }}>{HOLLARD.via}</p>
               </div>
               <span
                 style={{
-                  background: 'var(--accent)',
-                  color: 'var(--bg)',
                   fontFamily: 'var(--font-mono)',
                   fontSize: '0.6rem',
-                  fontWeight: 600,
                   letterSpacing: '0.14em',
-                  padding: '0.35rem 0.7rem',
                   textTransform: 'uppercase',
+                  color: 'var(--text-2)',
+                  border: '1px solid var(--border-2)',
+                  padding: '0.35rem 0.75rem',
+                  whiteSpace: 'nowrap',
                 }}
               >
                 Client Engagement
               </span>
             </div>
 
-            <p
-              style={{
-                color: 'var(--text)',
-                fontSize: 'var(--fs-md)',
-                lineHeight: 1.6,
-                maxWidth: '58ch',
-                marginBottom: '1.5rem',
-                fontWeight: 400,
-              }}
-            >
+            <p style={{ color: 'var(--text)', fontSize: 'var(--fs-md)', lineHeight: 1.65, maxWidth: '58ch', marginBottom: '1.5rem' }}>
               {HOLLARD.about}
             </p>
 
-            <div className="rule mb-5" />
-            <p className="label mb-3">{HOLLARD.role}</p>
+            <div className="rule" style={{ marginBottom: '1.25rem' }} />
+            <p className="label" style={{ marginBottom: '0.75rem' }}>{HOLLARD.role}</p>
 
-            <ul className="space-y-2 mb-5">
-              {HOLLARD.bullets.map((b, j) => <Bullet key={j} text={b} />)}
+            <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.25rem' }}>
+              {HOLLARD.bullets.map((b, i) => <Bullet key={i} text={b} />)}
             </ul>
 
-            <div className="flex flex-wrap gap-1.5">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
               {HOLLARD.tags.map((t) => <span key={t} className="tech-pill">{t}</span>)}
             </div>
           </motion.article>
 
-          {/* Internal projects */}
-          <motion.div variants={up} className="mt-12 mb-6 flex items-end justify-between">
+          {/* Internal heading */}
+          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', margin: '2.5rem 0 1.25rem' }}>
             <h3 className="h-sub">Internal Tooling</h3>
             <span className="label">Convergenc3</span>
-          </motion.div>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }} className="md:grid-cols-2">
             {INTERNAL.map((job, i) => (
               <motion.article
                 key={i}
                 variants={up}
-                whileHover={{ y: -4 }}
+                whileHover={{ y: -3 }}
                 transition={{ duration: 0.4 }}
                 className="card"
               >
-                <div className="flex items-start justify-between mb-3">
-                  <span className="label">{job.period}</span>
-                </div>
-                <h4
-                  style={{
-                    fontSize: 'var(--fs-lg)',
-                    fontWeight: 700,
-                    color: 'var(--text)',
-                    letterSpacing: '-0.01em',
-                    marginBottom: '1rem',
-                    lineHeight: 1.3,
-                  }}
-                >
+                <p className="label" style={{ marginBottom: '0.85rem' }}>{job.period}</p>
+                <h4 style={{ fontSize: 'var(--fs-lg)', fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.01em', lineHeight: 1.3, marginBottom: '1rem' }}>
                   {job.title}
                 </h4>
-                <ul className="space-y-2 mb-4">
+                <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', marginBottom: '1rem' }}>
                   {job.bullets.map((b, j) => <Bullet key={j} text={b} />)}
                 </ul>
-                <div className="flex flex-wrap gap-1.5">
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
                   {job.tags.map((t) => <span key={t} className="tech-pill">{t}</span>)}
                 </div>
               </motion.article>
             ))}
           </div>
+
         </motion.div>
       </div>
     </section>

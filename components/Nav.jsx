@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 const LINKS = [
   { href: '#about',      label: 'About'      },
-  { href: '#experience', label: 'Experience' },
+  { href: '#experience', label: 'Exp.'       },
   { href: '#projects',   label: 'Projects'   },
   { href: '#skills',     label: 'Skills'     },
   { href: '#contact',    label: 'Contact'    },
@@ -15,7 +15,7 @@ export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 60);
+    const fn = () => setScrolled(window.scrollY > 80);
     window.addEventListener('scroll', fn, { passive: true });
     return () => window.removeEventListener('scroll', fn);
   }, []);
@@ -27,70 +27,75 @@ export default function Nav() {
 
   return (
     <motion.header
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.1 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-bg/85 backdrop-blur-md border-b border-[var(--border)]' : ''
-      }`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8, delay: 0.1 }}
+      style={{
+        position: 'fixed',
+        top: 0, left: 0, right: 0,
+        zIndex: 50,
+        transition: 'background 0.4s ease, border-color 0.4s ease',
+        background: scrolled ? 'rgba(7,7,7,0.88)' : 'transparent',
+        backdropFilter: scrolled ? 'blur(12px)' : 'none',
+        borderBottom: scrolled ? '1px solid var(--border)' : '1px solid transparent',
+      }}
     >
       <div
-        className="flex items-center justify-between"
         style={{
-          padding: '1.1rem var(--pad)',
-          height: '4rem',
-          maxWidth: '1240px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          height: '3.75rem',
+          maxWidth: '1280px',
           margin: '0 auto',
+          padding: '0 var(--pad)',
         }}
       >
+        {/* Logo mark */}
         <a
           href="#hero"
           onClick={(e) => go(e, '#hero')}
-          className="flex items-center gap-2"
           style={{
-            fontFamily: 'var(--font-sans)',
-            fontSize: '0.82rem',
-            fontWeight: 700,
-            letterSpacing: '0.14em',
+            fontFamily: 'var(--font-display), serif',
+            fontSize: '1.15rem',
+            fontWeight: 600,
+            fontStyle: 'italic',
+            letterSpacing: '-0.02em',
             color: 'var(--text)',
-            textTransform: 'uppercase',
           }}
         >
-          <span>Dylan</span>
-          <span style={{ color: 'var(--accent)' }}>/</span>
-          <span style={{ color: 'var(--text-2)' }}>DC</span>
+          DC
         </a>
 
-        <nav className="hidden md:flex items-center gap-8">
+        {/* Links */}
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }}>
           {LINKS.map(({ href, label }) => (
             <a
               key={href}
               href={href}
               onClick={(e) => go(e, href)}
-              className="nav-link"
+              className="nav-link hidden md:block"
             >
               {label}
             </a>
           ))}
         </nav>
 
+        {/* Resume link */}
         <a
           href="/cv.pdf"
           download
-          className="hidden md:inline-flex items-center gap-1.5"
+          className="label hidden md:block"
           style={{
-            fontFamily: 'var(--font-sans)',
-            fontSize: '0.7rem',
-            fontWeight: 500,
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
             color: 'var(--text-2)',
             transition: 'color 0.2s',
+            borderBottom: '1px solid var(--text-3)',
+            paddingBottom: '1px',
           }}
           onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text)')}
           onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-2)')}
         >
-          Resume <span style={{ color: 'var(--text-3)' }}>↓</span>
+          Resume ↓
         </a>
       </div>
     </motion.header>
