@@ -59,6 +59,16 @@ img { display: block; max-width: 100%; }
   padding-bottom: clamp(5rem, 9vw, 8rem);
 }
 
+/*
+ * Sections must be position:relative + background so they stack correctly
+ * on top of the sticky-pinned hero as the user scrolls.
+ */
+main > section {
+  position: relative;
+  z-index: 1;
+  background: var(--bg);
+}
+
 /* ── Components ──────────────────────────────── */
 @layer components {
 
