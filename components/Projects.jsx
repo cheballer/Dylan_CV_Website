@@ -11,6 +11,7 @@ const PROJECTS = [
     role:  'Data Engineering',
     desc:  'Automated ETL pipeline reducing manual data preparation by ~80%, with structured outputs feeding downstream reports across stakeholder teams.',
     tags:  ['SQL', 'Python', 'ETL', 'Data Transformation'],
+    stat:  '80% reduction in manual prep',
   },
   {
     num:   '02',
@@ -19,6 +20,7 @@ const PROJECTS = [
     role:  'Full-Stack Development',
     desc:  'Desktop application with full CRUD, input validation, search/filter and SQL Server integration — replacing fragmented spreadsheet-based records.',
     tags:  ['C#', '.NET', 'SQL Server', 'Desktop'],
+    stat:  'Organisation-wide deployment',
   },
   {
     num:   '03',
@@ -27,6 +29,7 @@ const PROJECTS = [
     role:  'Systems Design',
     desc:  'Full-stack system with RBAC, contract lifecycle tracking, status filtering and audit trails — centralising access across multiple clinical teams.',
     tags:  ['Full Stack', 'RBAC', 'Agile', 'Healthcare'],
+    stat:  'Multi-team access control',
   },
 ];
 
@@ -36,7 +39,7 @@ const up = {
   show:   { opacity: 1, y: 0, transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] } },
 };
 
-function ProjectRow({ p, index }) {
+function ProjectRow({ p }) {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -46,22 +49,33 @@ function ProjectRow({ p, index }) {
       onHoverEnd={() => setHovered(false)}
       style={{
         borderTop: '1px solid var(--border)',
-        padding: '0',
-        cursor: 'default',
         position: 'relative',
         overflow: 'hidden',
+        cursor: 'default',
       }}
     >
       {/* Hover background sweep */}
       <motion.div
         animate={{ scaleX: hovered ? 1 : 0 }}
         initial={{ scaleX: 0 }}
-        transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
+        transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
         style={{
           position: 'absolute', inset: 0,
-          background: 'var(--surface)',
-          transformOrigin: 'left',
-          zIndex: 0,
+          background: 'var(--bg-2)',
+          transformOrigin: 'left', zIndex: 0,
+        }}
+      />
+      {/* Blue left accent line */}
+      <motion.div
+        animate={{ scaleY: hovered ? 1 : 0, opacity: hovered ? 1 : 0 }}
+        initial={{ scaleY: 0, opacity: 0 }}
+        transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
+        style={{
+          position: 'absolute', left: 0, top: 0, bottom: 0,
+          width: '2px',
+          background: 'var(--accent)',
+          boxShadow: '0 0 10px var(--accent-glow)',
+          transformOrigin: 'top', zIndex: 1,
         }}
       />
 
@@ -73,41 +87,64 @@ function ProjectRow({ p, index }) {
           gridTemplateColumns: '3.5rem 1fr auto',
           alignItems: 'center',
           gap: '2rem',
-          padding: '1.75rem 0',
-          transition: 'padding 0.3s ease',
+          padding: '1.85rem 0',
         }}
       >
         {/* Number */}
-        <span className="label" style={{ color: 'var(--text-3)' }}>{p.num}</span>
+        <motion.span
+          animate={{ color: hovered ? 'var(--accent)' : 'var(--text-3)' }}
+          transition={{ duration: 0.25 }}
+          className="label"
+        >
+          {p.num}
+        </motion.span>
 
         {/* Title + role */}
         <div>
-          <motion.p
-            animate={{ color: hovered ? 'var(--text)' : 'var(--text)' }}
+          <p
             style={{
               fontFamily: 'var(--font-sans)',
               fontSize: 'clamp(1.1rem, 2.2vw, 1.75rem)',
               fontWeight: 700,
               letterSpacing: '-0.02em',
               lineHeight: 1.2,
-              marginBottom: '0.25rem',
+              marginBottom: '0.3rem',
+              color: 'var(--text)',
             }}
           >
             {p.title}
-          </motion.p>
-          <p className="label" style={{ color: 'var(--text-3)' }}>{p.role} · {p.year}</p>
+          </p>
+          <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', alignItems: 'center' }}>
+            <p className="label" style={{ color: 'var(--text-3)' }}>{p.role} · {p.year}</p>
+            <AnimatePresence>
+              {hovered && (
+                <motion.span
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -6 }}
+                  transition={{ duration: 0.2 }}
+                  style={{
+                    fontFamily: 'var(--font-mono)', fontSize: '0.58rem',
+                    letterSpacing: '0.14em', textTransform: 'uppercase',
+                    color: 'var(--accent)',
+                  }}
+                >
+                  {p.stat}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
-        {/* Arrow indicator */}
+        {/* Arrow */}
         <motion.span
-          animate={{ x: hovered ? 4 : 0, opacity: hovered ? 1 : 0.3 }}
-          transition={{ duration: 0.3 }}
-          style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: '0.75rem',
-            color: 'var(--text)',
-            letterSpacing: '0.1em',
+          animate={{
+            x: hovered ? 5 : 0,
+            opacity: hovered ? 1 : 0.2,
+            color: hovered ? 'var(--accent)' : 'var(--text)',
           }}
+          transition={{ duration: 0.3 }}
+          style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem' }}
         >
           →
         </motion.span>
@@ -120,13 +157,13 @@ function ProjectRow({ p, index }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
             style={{ overflow: 'hidden', position: 'relative', zIndex: 1 }}
           >
-            <div style={{ padding: '0 0 1.75rem 5.5rem' }}>
+            <div style={{ padding: '0 0 1.85rem 5.5rem' }}>
               <p style={{
                 color: 'var(--text-2)', fontSize: 'var(--fs-base)',
-                lineHeight: 1.7, maxWidth: '55ch', marginBottom: '1rem',
+                lineHeight: 1.75, maxWidth: '55ch', marginBottom: '1rem',
               }}>
                 {p.desc}
               </p>
@@ -158,16 +195,14 @@ export default function Projects() {
             <motion.h2 variants={up} className="h-section lg:col-span-4">Selected<br />Work</motion.h2>
             <div className="lg:col-span-8" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
               <motion.p variants={up}
-                style={{ fontSize: 'var(--fs-md)', color: 'var(--text-2)', lineHeight: 1.7, maxWidth: '48ch', marginBottom: '0.5rem' }}>
+                style={{ fontSize: 'var(--fs-md)', color: 'var(--text-2)', lineHeight: 1.75, maxWidth: '48ch' }}>
                 Independent builds — from architecture to deployment. Hover each to expand.
               </motion.p>
             </div>
           </div>
 
-          {/* Row-based project list */}
           <div>
-            {PROJECTS.map((p, i) => <ProjectRow key={p.num} p={p} index={i} />)}
-            {/* Bottom rule */}
+            {PROJECTS.map((p) => <ProjectRow key={p.num} p={p} />)}
             <div style={{ borderTop: '1px solid var(--border)' }} />
           </div>
         </motion.div>

@@ -1,6 +1,7 @@
 import Nav          from '@/components/Nav';
 import ClickSpark   from '@/components/ClickSpark';
 import GrainOverlay from '@/components/GrainOverlay';
+import CursorGlow   from '@/components/CursorGlow';
 import Hero         from '@/components/Hero';
 import About        from '@/components/About';
 import Experience   from '@/components/Experience';
@@ -13,12 +14,13 @@ export default function Page() {
   return (
     <>
       <GrainOverlay />
+      <CursorGlow />
       <ClickSpark
-        sparkColor="rgba(232,232,228,0.9)"
-        sparkSize={7}
-        sparkRadius={16}
+        sparkColor="rgba(56,189,248,0.85)"
+        sparkSize={6}
+        sparkRadius={18}
         sparkCount={6}
-        duration={380}
+        duration={400}
       >
         <Nav />
         <main>

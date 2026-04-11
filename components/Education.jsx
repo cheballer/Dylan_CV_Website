@@ -41,26 +41,29 @@ function EduCard({ edu }) {
       variants={up}
       style={{
         border: '1px solid var(--border)',
+        background: 'var(--bg-2)',
         padding: '2rem 2rem 1.75rem',
         position: 'relative',
         overflow: 'hidden',
+        transition: 'border-color 0.4s ease',
       }}
-      whileHover={{ borderColor: 'rgba(255,255,255,0.14)' }}
-      transition={{ duration: 0.4 }}
+      whileHover={{ borderColor: 'var(--border-2)' }}
     >
-      {/* Top-left corner tick — white if active, dim if completed */}
+      {/* Top corner tick */}
       <div style={{
         position: 'absolute', top: 0, left: 0,
-        width: '2.5rem', height: '1px',
-        background: isActive ? 'var(--text)' : 'var(--text-3)',
+        width: '3rem', height: '2px',
+        background: isActive ? 'var(--accent)' : 'var(--text-3)',
+        boxShadow: isActive ? '0 0 8px var(--accent-glow)' : 'none',
       }} />
       <div style={{
         position: 'absolute', top: 0, left: 0,
-        width: '1px', height: '2.5rem',
-        background: isActive ? 'var(--text)' : 'var(--text-3)',
+        width: '2px', height: '3rem',
+        background: isActive ? 'var(--accent)' : 'var(--text-3)',
+        boxShadow: isActive ? '0 0 8px var(--accent-glow)' : 'none',
       }} />
 
-      {/* Header row: record ID + status */}
+      {/* Header: record ID + status */}
       <div style={{
         display: 'flex', alignItems: 'center',
         justifyContent: 'space-between', flexWrap: 'wrap',
@@ -77,25 +80,28 @@ function EduCard({ edu }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           {isActive && (
             <motion.div
-              animate={{ opacity: [1, 0.15, 1] }}
+              animate={{
+                opacity: [1, 0.15, 1],
+                boxShadow: ['0 0 5px var(--accent)', '0 0 0px transparent', '0 0 5px var(--accent)'],
+              }}
               transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
               style={{
                 width: '5px', height: '5px', borderRadius: '50%',
-                background: 'var(--text)', flexShrink: 0,
+                background: 'var(--accent)', flexShrink: 0,
               }}
             />
           )}
           <span style={{
             fontFamily: 'var(--font-mono)', fontSize: '0.58rem',
             letterSpacing: '0.18em', textTransform: 'uppercase',
-            color: isActive ? 'var(--text)' : 'var(--text-3)',
+            color: isActive ? 'var(--accent)' : 'var(--text-3)',
           }}>
             {edu.label}
           </span>
         </div>
       </div>
 
-      {/* Degree */}
+      {/* Degree name */}
       <h3 style={{
         fontFamily: 'var(--font-display), serif',
         fontSize: 'clamp(1.45rem, 2.6vw, 2.1rem)',
@@ -116,15 +122,11 @@ function EduCard({ edu }) {
       </p>
 
       {/* Divider */}
-      <div style={{
-        height: '1px', background: 'var(--border)', marginBottom: '1.25rem',
-      }} />
+      <div style={{ height: '1px', background: 'var(--border)', marginBottom: '1.25rem' }} />
 
       {/* Subjects */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
-        {edu.subjects.map((s) => (
-          <span key={s} className="tech-pill">{s}</span>
-        ))}
+        {edu.subjects.map((s) => <span key={s} className="tech-pill">{s}</span>)}
       </div>
     </motion.article>
   );
@@ -150,7 +152,7 @@ export default function Education() {
               Background
             </motion.h2>
             <motion.p variants={up} className="lg:col-span-8"
-              style={{ fontSize: 'var(--fs-md)', color: 'var(--text-2)', lineHeight: 1.7, maxWidth: '52ch' }}>
+              style={{ fontSize: 'var(--fs-md)', color: 'var(--text-2)', lineHeight: 1.75, maxWidth: '52ch' }}>
               Academic foundation in computing, mathematics and applied software engineering.
             </motion.p>
           </div>

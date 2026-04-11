@@ -7,8 +7,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        bg:      '#070707',
-        surface: '#0F0F0F',
+        bg:      '#07090F',
+        'bg-2':  '#0D1117',
+        'bg-3':  '#131924',
+        surface: '#0D1117',
+        accent:  '#38BDF8',
       },
       fontFamily: {
         display: ['var(--font-display)', 'serif'],

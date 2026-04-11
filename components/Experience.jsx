@@ -68,7 +68,7 @@ export default function Experience() {
             className="lg:grid-cols-12">
             <motion.h2 variants={up} className="h-section lg:col-span-4">Work</motion.h2>
             <motion.p variants={up} className="lg:col-span-8"
-              style={{ fontSize: 'var(--fs-md)', color: 'var(--text-2)', lineHeight: 1.7, maxWidth: '52ch' }}>
+              style={{ fontSize: 'var(--fs-md)', color: 'var(--text-2)', lineHeight: 1.75, maxWidth: '52ch' }}>
               Client-facing enterprise data engineering — and internal tooling built from scratch.
             </motion.p>
           </div>
@@ -79,35 +79,29 @@ export default function Experience() {
             whileHover={{ x: 4 }}
             transition={{ duration: 0.4 }}
             style={{
-              borderLeft: '2px solid var(--text-3)',
+              borderLeft: '2px solid var(--accent)',
               paddingLeft: '2rem',
               marginBottom: '4rem',
               position: 'relative',
             }}
           >
-            {/* Animated left-border accent on hover */}
-            <motion.div
-              whileHover={{ background: 'var(--text)' }}
-              style={{
-                position: 'absolute', left: -2, top: 0, bottom: 0,
-                width: '2px', background: 'var(--text-3)',
-                transition: 'background 0.3s ease',
-              }}
-            />
+            {/* Accent glow on border */}
+            <div style={{
+              position: 'absolute', left: -2, top: 0, bottom: 0, width: '2px',
+              background: 'var(--accent)',
+              boxShadow: '0 0 12px var(--accent-glow)',
+            }} />
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', marginBottom: '1.1rem' }}>
               <div>
-                {/* Period + live pulse indicator */}
+                {/* Period with pulsing live dot */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.6rem' }}>
                   <motion.div
-                    animate={{ opacity: [1, 0.15, 1] }}
+                    animate={{ opacity: [1, 0.15, 1], boxShadow: ['0 0 4px var(--accent)', '0 0 0px transparent', '0 0 4px var(--accent)'] }}
                     transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-                    style={{
-                      width: '5px', height: '5px', borderRadius: '50%',
-                      background: 'var(--text)', flexShrink: 0,
-                    }}
+                    style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }}
                   />
-                  <p className="label">{HOLLARD.period}</p>
+                  <p className="label" style={{ color: 'var(--text-2)' }}>{HOLLARD.period}</p>
                 </div>
                 <h3 style={{
                   fontFamily: 'var(--font-display), serif',
@@ -117,11 +111,11 @@ export default function Experience() {
                 }}>
                   {HOLLARD.client}
                 </h3>
-                <p className="label" style={{ marginTop: '0.4rem' }}>{HOLLARD.via}</p>
+                <p className="label" style={{ marginTop: '0.4rem', color: 'var(--text-3)' }}>{HOLLARD.via}</p>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
                 <span style={{
-                  fontFamily: 'var(--font-mono)', fontSize: '0.6rem',
+                  fontFamily: 'var(--font-mono)', fontSize: '0.58rem',
                   letterSpacing: '0.14em', textTransform: 'uppercase',
                   color: 'var(--text-2)', border: '1px solid var(--border-2)',
                   padding: '0.35rem 0.75rem', whiteSpace: 'nowrap',
@@ -129,24 +123,24 @@ export default function Experience() {
                   Client Engagement
                 </span>
                 <span style={{
-                  fontFamily: 'var(--font-mono)', fontSize: '0.55rem',
-                  letterSpacing: '0.16em', textTransform: 'uppercase',
-                  color: 'var(--text-3)',
+                  fontFamily: 'var(--font-mono)', fontSize: '0.52rem',
+                  letterSpacing: '0.18em', textTransform: 'uppercase',
+                  color: 'var(--accent)',
                 }}>
                   PIPELINE: ACTIVE
                 </span>
               </div>
             </div>
 
-            <p style={{ color: 'var(--text)', fontSize: 'var(--fs-md)', lineHeight: 1.65, maxWidth: '58ch', marginBottom: '1.5rem' }}>
+            <p style={{ color: 'var(--text-2)', fontSize: 'var(--fs-md)', lineHeight: 1.75, maxWidth: '58ch', marginBottom: '1.5rem' }}>
               {HOLLARD.about}
             </p>
-            <div className="rule" style={{ marginBottom: '1.25rem' }} />
-            <p className="label" style={{ marginBottom: '0.85rem' }}>{HOLLARD.role}</p>
-            <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.25rem' }}>
+            <div style={{ height: '1px', background: 'var(--border)', marginBottom: '1.25rem' }} />
+            <p className="label" style={{ marginBottom: '0.85rem', color: 'var(--text-2)' }}>{HOLLARD.role}</p>
+            <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', marginBottom: '1.5rem' }}>
               {HOLLARD.bullets.map((b, i) => (
-                <li key={i} style={{ display: 'flex', gap: '0.85rem', color: 'var(--text-2)', fontSize: 'var(--fs-base)', lineHeight: 1.65 }}>
-                  <span style={{ color: 'var(--text-3)', flexShrink: 0, marginTop: '0.55em' }}>—</span>
+                <li key={i} style={{ display: 'flex', gap: '0.85rem', color: 'var(--text-2)', fontSize: 'var(--fs-base)', lineHeight: 1.7 }}>
+                  <span style={{ color: 'var(--accent)', flexShrink: 0, marginTop: '0.55em', fontSize: '0.6rem' }}>▸</span>
                   {b}
                 </li>
               ))}
@@ -159,7 +153,7 @@ export default function Experience() {
           {/* ── Internal projects ──────────────────────────────────── */}
           <motion.div variants={up} style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
             <h3 className="h-sub">Internal Tooling</h3>
-            <span className="label">Convergenc3</span>
+            <span className="label" style={{ color: 'var(--text-3)' }}>Convergenc3</span>
           </motion.div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1px', background: 'var(--border)' }} className="md:grid-cols-2">
@@ -167,18 +161,18 @@ export default function Experience() {
               <motion.article
                 key={i}
                 variants={slideIn(i === 0 ? 'left' : 'right')}
-                whileHover={{ y: -4 }}
-                transition={{ duration: 0.4 }}
+                whileHover={{ y: -3 }}
+                transition={{ duration: 0.35 }}
                 className="card"
               >
-                <p className="label" style={{ marginBottom: '0.85rem' }}>{job.period}</p>
+                <p className="label" style={{ marginBottom: '0.85rem', color: 'var(--text-3)' }}>{job.period}</p>
                 <h4 style={{ fontSize: 'var(--fs-lg)', fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.01em', lineHeight: 1.3, marginBottom: '1rem' }}>
                   {job.title}
                 </h4>
                 <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', marginBottom: '1rem' }}>
                   {job.bullets.map((b, j) => (
-                    <li key={j} style={{ display: 'flex', gap: '0.85rem', color: 'var(--text-2)', fontSize: 'var(--fs-base)', lineHeight: 1.65 }}>
-                      <span style={{ color: 'var(--text-3)', flexShrink: 0, marginTop: '0.55em' }}>—</span>
+                    <li key={j} style={{ display: 'flex', gap: '0.85rem', color: 'var(--text-2)', fontSize: 'var(--fs-base)', lineHeight: 1.7 }}>
+                      <span style={{ color: 'var(--accent)', flexShrink: 0, marginTop: '0.55em', fontSize: '0.6rem' }}>▸</span>
                       {b}
                     </li>
                   ))}

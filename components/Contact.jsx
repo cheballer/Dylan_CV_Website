@@ -20,7 +20,7 @@ export default function Contact() {
             06 / Contact
           </motion.div>
 
-          {/* Quote-style heading */}
+          {/* Statement */}
           <motion.p
             variants={up}
             style={{
@@ -38,14 +38,14 @@ export default function Contact() {
             Ready for the next floor?
           </motion.p>
 
-          {/* Email — large interactive */}
+          {/* Email */}
           <motion.a
             variants={up}
             href="mailto:cheballahdylan02@gmail.com"
             style={{
               display: 'inline-block',
               fontFamily: 'var(--font-sans), sans-serif',
-              fontSize: 'clamp(1.1rem, 3.5vw, 3.5rem)',
+              fontSize: 'clamp(1.1rem, 3.2vw, 3.2rem)',
               fontWeight: 700,
               letterSpacing: '-0.02em',
               lineHeight: 1,
@@ -54,15 +54,22 @@ export default function Contact() {
               wordBreak: 'break-all',
               borderBottom: '1px solid var(--border-2)',
               paddingBottom: '0.5rem',
-              transition: 'opacity 0.25s ease',
+              transition: 'color 0.25s ease',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.55')}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text)')}
           >
             cheballahdylan02@gmail.com
           </motion.a>
 
-          <div className="rule" style={{ marginBottom: '2.5rem' }} />
+          {/* Divider */}
+          <div
+            style={{
+              height: '1px',
+              background: 'linear-gradient(to right, var(--accent-dim), transparent)',
+              marginBottom: '2.5rem',
+            }}
+          />
 
           {/* Footer row */}
           <motion.div
@@ -87,7 +94,7 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="label"
                   style={{ color: 'var(--text-2)', transition: 'color 0.2s' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text)')}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
                   onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-2)')}
                 >
                   {label} ↗
