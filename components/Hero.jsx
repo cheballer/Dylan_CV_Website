@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import DataGraph from './DataGraph';
 
 const reveal = (delay = 0) => ({
   initial: { clipPath: 'inset(0 0 100% 0)' },
@@ -38,23 +37,29 @@ export default function Hero() {
           background: '#070707',
         }}
       >
-        {/* ── Spline: fills the ENTIRE hero section ──────────────────
-            Scale up 1.6× with transform-origin pointing at the
-            center of the 3D scene (where the figure + staircase is)
-            so the interesting content fills the right side.
+        {/* ── Spline: right-side column ───────────────────────────────
+            Positioned in the right 62% of the hero — the Spline scene
+            renders for this specific viewport shape, meaning the camera
+            frames the ascending figure at a portrait-ish aspect ratio,
+            making the figure fill the space rather than being tiny in
+            a wide landscape frame.
         ─────────────────────────────────────────────────────────────── */}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 1, overflow: 'hidden' }}>
+        <div
+          style={{
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            width: '62%',
+            height: '100%',
+            zIndex: 1,
+          }}
+        >
           <iframe
             src="https://my.spline.design/ascending-YPo0HtclpiuFcNBoe8Qt40EK/"
             frameBorder="0"
             loading="eager"
             title="Ascending — 3D scene"
-            style={{
-              width: '100%', height: '100%', border: 'none', display: 'block',
-              /* Zoom into the center of the Spline scene where the figure is */
-              transform: 'scale(1.6)',
-              transformOrigin: '60% 42%',
-            }}
+            style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
           />
           {/* Cover the "Built with Spline" badge */}
           <div
@@ -66,41 +71,29 @@ export default function Hero() {
           />
         </div>
 
-        {/* ── Gradient: very dark on the left (text), open on right (scene) ── */}
+        {/* ── Gradient: solid left (text area) → transparent right (Spline) ── */}
         <div
           style={{
             position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none',
             background: [
               'linear-gradient(to right,',
-              '  rgba(7,7,7,0.97) 0%,',
-              '  rgba(7,7,7,0.94) 24%,',
-              '  rgba(7,7,7,0.72) 44%,',
-              '  rgba(7,7,7,0.18) 66%,',
-              '  transparent 100%)',
+              '  rgba(7,7,7,1.0) 0%,',
+              '  rgba(7,7,7,0.98) 30%,',
+              '  rgba(7,7,7,0.82) 40%,',
+              '  rgba(7,7,7,0.35) 50%,',
+              '  rgba(7,7,7,0.05) 60%,',
+              '  transparent 68%)',
             ].join(''),
           }}
         />
-        {/* Bottom vignette so CTA row stays legible */}
+        {/* Bottom vignette */}
         <div
           style={{
             position: 'absolute', bottom: 0, left: 0, right: 0,
-            height: '28%', zIndex: 2, pointerEvents: 'none',
-            background: 'linear-gradient(to top, rgba(7,7,7,0.85) 0%, transparent 100%)',
+            height: '22%', zIndex: 2, pointerEvents: 'none',
+            background: 'linear-gradient(to top, rgba(7,7,7,0.9) 0%, transparent 100%)',
           }}
         />
-
-        {/* ── Data pipeline graph — right side data artifact ──────── */}
-        <div style={{
-          position: 'absolute',
-          right: 0,
-          top: '10%',
-          width: '44%',
-          height: '80%',
-          zIndex: 3,
-          pointerEvents: 'none',
-        }}>
-          <DataGraph />
-        </div>
 
         {/* ── Text overlay ─────────────────────────────────────────── */}
         <div
@@ -109,8 +102,7 @@ export default function Hero() {
             display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
             padding: 'clamp(1.25rem, 2.5vw, 2.5rem)',
             paddingTop: 'clamp(4.5rem, 7vw, 6rem)',
-            /* Only take left ~55% — right side fully shows the Spline */
-            maxWidth: '58%',
+            maxWidth: '52%',
             pointerEvents: 'none',
           }}
         >
