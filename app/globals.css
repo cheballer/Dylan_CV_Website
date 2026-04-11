@@ -75,12 +75,13 @@ img { display: block; max-width: 100%; }
 }
 
 /*
- * Sections must stack over the sticky-pinned hero.
+ * Sections stack over the sticky hero AND over the fixed GridScan background.
+ * background is slightly transparent so the grid texture shows through subtly.
  */
 main > section {
   position: relative;
   z-index: 1;
-  background: var(--bg);
+  background: rgba(7, 9, 15, 0.82);
 }
 
 /* ── Components ──────────────────────────────── */
