@@ -1,30 +1,37 @@
-import Nav             from '@/components/Nav';
-import ClickSpark      from '@/components/ClickSpark';
-import GrainOverlay    from '@/components/GrainOverlay';
-import CursorGlow      from '@/components/CursorGlow';
-import GridBackground  from '@/components/GridBackground';
-import Hero            from '@/components/Hero';
-import About           from '@/components/About';
-import Experience      from '@/components/Experience';
-import Projects        from '@/components/Projects';
-import Skills          from '@/components/Skills';
-import Education       from '@/components/Education';
-import Contact         from '@/components/Contact';
+import Nav           from '@/components/Nav';
+import ClickSpark    from '@/components/ClickSpark';
+import GrainOverlay  from '@/components/GrainOverlay';
+import CursorGlow    from '@/components/CursorGlow';
+import GridBackground from '@/components/GridBackground';
+import ScrollProgress from '@/components/ScrollProgress';
+import SectionNav    from '@/components/SectionNav';
+import Hero          from '@/components/Hero';
+import About         from '@/components/About';
+import Experience    from '@/components/Experience';
+import Projects      from '@/components/Projects';
+import Skills        from '@/components/Skills';
+import Education     from '@/components/Education';
+import Contact       from '@/components/Contact';
 
 export default function Page() {
   return (
     <>
-      {/* Fixed layers — back to front */}
-      <GridBackground />   {/* z-index: 0  — grid shader, fades in after hero */}
-      <GrainOverlay />     {/* z-index: 9997 — film grain */}
-      <CursorGlow />       {/* z-index: 9998 — cursor glow */}
+      {/* ── Fixed ambient layers — back to front ─────────── */}
+      <GridBackground />    {/* z:0   — WebGL grid shader     */}
+      <GrainOverlay />      {/* z:9997— film grain texture    */}
+      <CursorGlow />        {/* z:9998— mouse radial glow     */}
 
+      {/* ── Global UI ────────────────────────────────────── */}
+      <ScrollProgress />    {/* slim top progress rail        */}
+      <SectionNav />        {/* floating right section dots   */}
+
+      {/* ── Page content ─────────────────────────────────── */}
       <ClickSpark
-        sparkColor="rgba(109,40,217,0.9)"
-        sparkSize={6}
-        sparkRadius={18}
-        sparkCount={7}
-        duration={420}
+        sparkColor="rgba(124,58,237,0.85)"
+        sparkSize={5}
+        sparkRadius={16}
+        sparkCount={8}
+        duration={380}
       >
         <Nav />
         <main>

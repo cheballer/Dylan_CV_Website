@@ -4,56 +4,59 @@ import { useRef, useEffect, useCallback } from 'react';
 import { motion, useInView, useMotionValue, useTransform, animate } from 'framer-motion';
 import TextBand from './TextBand';
 
+/* ── Animated counter ───────────────────────────────────────── */
 function Counter({ value, suffix = '' }) {
-  const ref = useRef(null);
+  const ref   = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
-  const count = useMotionValue(0);
+  const count  = useMotionValue(0);
   const display = useTransform(count, (v) => Math.round(v) + suffix);
 
   useEffect(() => {
-    if (inView) animate(count, value, { duration: 2, ease: [0.16, 1, 0.3, 1] });
+    if (inView) animate(count, value, { duration: 2.2, ease: [0.16, 1, 0.3, 1] });
   }, [inView, count, value]);
 
   return <motion.span ref={ref}>{display}</motion.span>;
 }
 
-/* Reusable 3D tilt handler */
-function use3DTilt() {
+/* ── 3D tilt hook ───────────────────────────────────────────── */
+function use3DTilt(strength = 7) {
   const ref = useRef(null);
-
   const onMove = useCallback((e) => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width  - 0.5;
-    const y = (e.clientY - rect.top)  / rect.height - 0.5;
-    el.style.transform = `perspective(900px) rotateX(${-y * 9}deg) rotateY(${x * 9}deg) translateY(-6px) scale(1.01)`;
-  }, []);
-
+    const el = ref.current; if (!el) return;
+    const r  = el.getBoundingClientRect();
+    const x  = (e.clientX - r.left) / r.width  - 0.5;
+    const y  = (e.clientY - r.top)  / r.height - 0.5;
+    el.style.transform = `perspective(900px) rotateX(${-y * strength}deg) rotateY(${x * strength}deg) translateY(-6px) scale(1.01)`;
+    el.style.transition = 'transform 0.12s ease';
+  }, [strength]);
   const onLeave = useCallback(() => {
-    if (ref.current)
-      ref.current.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)';
+    if (ref.current) {
+      ref.current.style.transform = '';
+      ref.current.style.transition = 'transform 0.55s cubic-bezier(0.23,1,0.32,1)';
+    }
   }, []);
-
   return { ref, onMove, onLeave };
 }
 
+/* ── Variants ───────────────────────────────────────────────── */
 const up = {
-  hidden: { opacity: 0, y: 26 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } },
+  hidden:  { opacity: 0, y: 28, filter: 'blur(3px)' },
+  visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] } },
 };
-const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.07 } } };
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
+};
 
 const BAND_ITEMS = [
-  'SQL', 'Python', 'ETL Pipelines', 'Data Engineering',
-  'System Analysis', 'RAG Systems', 'MongoDB', 'React',
-  'Power Automate', 'Machine Learning',
+  'SQL', 'Python', 'ETL Pipelines', 'Data Engineering', 'System Analysis',
+  'RAG Systems', 'MongoDB', 'React', 'Power Automate', 'Machine Learning',
 ];
 
 const STATS = [
-  { value: 2,  suffix: '+', label: 'Years experience'            },
-  { value: 1,  suffix: '',  label: 'Enterprise client · Hollard' },
-  { value: 3,  suffix: '',  label: 'Projects built from scratch'  },
+  { value: 2,  suffix: '+', label: 'Years Experience'           },
+  { value: 1,  suffix: '',  label: 'Enterprise Client · Hollard' },
+  { value: 3,  suffix: '',  label: 'Systems Built End-to-End'    },
 ];
 
 const FACTS = [
@@ -65,64 +68,106 @@ const FACTS = [
   { label: 'Status',  value: 'Open to opportunities' },
 ];
 
-function StatCard({ stat }) {
-  const { ref, onMove, onLeave } = use3DTilt();
+/* ── Stat card ──────────────────────────────────────────────── */
+function StatCard({ stat, index }) {
+  const { ref, onMove, onLeave } = use3DTilt(8);
+  return (
+    <motion.div
+      variants={up}
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      className="glass"
+      style={{
+        padding: '2.5rem 2rem',
+        position: 'relative', overflow: 'hidden',
+        cursor: 'default',
+      }}
+    >
+      {/* Gradient top bar */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
+        background: `linear-gradient(to right, transparent, rgba(${index === 0 ? '124,58,237' : index === 1 ? '109,40,217' : '139,92,246'},0.6), transparent)`,
+      }} />
+      {/* Number */}
+      <p style={{
+        fontFamily: 'var(--font-sans)',
+        fontWeight: 800,
+        fontSize: 'clamp(3rem, 7vw, 5.5rem)',
+        lineHeight: 1,
+        letterSpacing: '-0.05em',
+        color: 'var(--p5)',
+        textShadow: '0 0 40px rgba(139,92,246,0.3)',
+        marginBottom: '0.75rem',
+      }}>
+        <Counter value={stat.value} suffix={stat.suffix} />
+      </p>
+      <p style={{
+        fontFamily: 'var(--font-mono)',
+        fontSize: 'var(--fs-xs)',
+        letterSpacing: '0.16em',
+        textTransform: 'uppercase',
+        color: 'var(--text-meta)',
+        lineHeight: 1.5,
+      }}>
+        {stat.label}
+      </p>
+    </motion.div>
+  );
+}
+
+/* ── Fact cell ──────────────────────────────────────────────── */
+function FactCell({ label, value }) {
+  const { ref, onMove, onLeave } = use3DTilt(6);
   return (
     <div
       ref={ref}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
-      className="glass-card"
-      style={{
-        padding: '2.25rem 2rem',
-        display: 'flex', flexDirection: 'column', gap: '0.7rem',
-        cursor: 'default',
-      }}
+      className="glass"
+      style={{ padding: '1.25rem 1.1rem', cursor: 'default' }}
     >
-      {/* Subtle top glow line */}
-      <div style={{
-        position: 'absolute', top: 0, left: '1.5rem', right: '1.5rem',
-        height: '1px',
-        background: 'linear-gradient(to right, transparent, rgba(124,58,237,0.5), transparent)',
-      }} />
       <p style={{
-        fontFamily: 'var(--font-sans)', fontWeight: 800,
-        fontSize: 'clamp(2.8rem, 6vw, 5rem)',
-        lineHeight: 1, letterSpacing: '-0.05em',
-        color: 'var(--accent-3)',
-        textShadow: '0 0 30px rgba(139, 92, 246, 0.35)',
+        fontFamily: 'var(--font-mono)',
+        fontSize: 'var(--fs-2xs)',
+        letterSpacing: '0.2em',
+        textTransform: 'uppercase',
+        color: 'var(--text-4)',
+        marginBottom: '0.45rem',
       }}>
-        <Counter value={stat.value} suffix={stat.suffix} />
+        {label}
       </p>
-      <p className="label" style={{ color: 'var(--text-2)', fontSize: '0.62rem' }}>{stat.label}</p>
+      <p style={{
+        color: 'var(--text-2)',
+        fontSize: 'var(--fs-sm)',
+        fontWeight: 500,
+        lineHeight: 1.4,
+      }}>
+        {value}
+      </p>
     </div>
   );
 }
 
+/* ── Section ────────────────────────────────────────────────── */
 export default function About() {
   return (
     <section id="about" className="section-pad" style={{ borderTop: '1px solid var(--border)' }}>
+
       <motion.div
-        initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.04 }}
+        initial="hidden" whileInView="visible"
+        viewport={{ once: true, amount: 0.04 }}
         variants={stagger}
         className="container-wide"
       >
+        {/* Section marker */}
         <motion.div variants={up} className="section-num" style={{ marginBottom: '3.5rem' }}>
-          01 / About
+          01 / Profile
         </motion.div>
 
-        {/* Oversized statement */}
-        <div style={{ marginBottom: '2rem', overflow: 'hidden' }}>
-          <motion.h2
-            variants={up}
-            style={{
-              fontFamily: 'var(--font-sans), sans-serif',
-              fontSize: 'clamp(3rem, 8.5vw, 11rem)',
-              fontWeight: 800, lineHeight: 0.87,
-              letterSpacing: '-0.04em', color: 'var(--text)',
-              whiteSpace: 'nowrap',
-            }}
-          >
+        {/* Oversized heading */}
+        <div style={{ overflow: 'hidden', marginBottom: '1.5rem' }}>
+          <motion.h2 variants={up} className="h-display">
             I BUILD DATA
           </motion.h2>
         </div>
@@ -130,66 +175,81 @@ export default function About() {
           <motion.h2
             variants={up}
             style={{
-              fontFamily: 'var(--font-sans), sans-serif',
-              fontSize: 'clamp(3rem, 8.5vw, 11rem)',
-              fontWeight: 800, lineHeight: 0.87,
+              fontFamily: 'var(--font-sans)',
+              fontWeight: 800,
+              fontSize: 'clamp(2.8rem, 7vw, 8rem)',
+              lineHeight: 0.88,
               letterSpacing: '-0.04em',
               color: 'transparent',
-              WebkitTextStroke: '1px rgba(124, 58, 237, 0.45)',
-              whiteSpace: 'nowrap',
+              WebkitTextStroke: '1px rgba(124,58,237,0.38)',
             }}
           >
             SYSTEMS.
           </motion.h2>
         </div>
 
-        {/* Stats — glass cards row */}
-        <motion.div
-          variants={up}
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '1.25rem',
-            marginBottom: '5.5rem',
-          }}
-        >
-          {STATS.map((s) => <StatCard key={s.label} stat={s} />)}
-        </motion.div>
+        {/* Stat cards */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '1rem',
+          marginBottom: '5.5rem',
+        }}>
+          {STATS.map((s, i) => <StatCard key={s.label} stat={s} index={i} />)}
+        </div>
       </motion.div>
 
-      {/* Marquee band */}
-      <TextBand items={BAND_ITEMS} speed={28} direction={1} />
+      {/* Marquee */}
+      <TextBand items={BAND_ITEMS} speed={30} direction={1} />
 
       {/* Bio + facts */}
-      <div className="container-wide" style={{ paddingTop: '4.5rem' }}>
+      <div className="container-wide" style={{ paddingTop: '5rem' }}>
         <motion.div
-          initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.06 }}
+          initial="hidden" whileInView="visible"
+          viewport={{ once: true, amount: 0.06 }}
           variants={stagger}
         >
           <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '4rem' }}
             className="lg:grid-cols-12">
 
-            {/* Bio paragraphs */}
+            {/* Bio */}
             <motion.div variants={stagger} className="lg:col-span-7"
-              style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem' }}>
               {[
                 'At Convergenc3, I\'m deployed into large enterprise environments — using SQL to query, validate and analyse data across multi-database systems for clients including Hollard Insurance. I work directly alongside the Head of Data on ongoing platform requirements.',
                 'Beyond client work, I\'ve built internal tooling from scratch: an AI-powered RAG document system that lets the company query its documentation in plain language, and a full employee onboarding platform used across the organisation.',
                 'I move between technical and business contexts naturally — translating stakeholder requirements into engineering execution, and raw data into working, maintained output.',
-              ].map((para, i) => (
-                <motion.p key={i} variants={up}
-                  style={{ color: 'var(--text-2)', fontSize: 'var(--fs-md)', lineHeight: 1.85, fontWeight: 300 }}>
-                  {para}
+              ].map((p, i) => (
+                <motion.p key={i} variants={up} style={{
+                  color: 'var(--text-3)',
+                  fontSize: 'var(--fs-md)',
+                  lineHeight: 1.88,
+                  fontWeight: 300,
+                }}>
+                  {p}
                 </motion.p>
               ))}
             </motion.div>
 
-            {/* Facts — glass grid */}
+            {/* Fact grid */}
             <motion.div variants={up} className="lg:col-span-5">
+              {/* Panel header */}
               <div style={{
-                display: 'grid', gridTemplateColumns: '1fr 1fr',
-                gap: '0.75rem',
+                display: 'flex', alignItems: 'center', gap: '0.75rem',
+                marginBottom: '1rem',
               }}>
+                <div style={{ width: '2rem', height: '1px', background: 'rgba(124,58,237,0.4)' }} />
+                <span style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 'var(--fs-2xs)',
+                  letterSpacing: '0.25em',
+                  textTransform: 'uppercase',
+                  color: 'var(--text-4)',
+                }}>
+                  Profile Data
+                </span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
                 {FACTS.map(({ label, value }) => (
                   <FactCell key={label} label={label} value={value} />
                 ))}
@@ -199,26 +259,5 @@ export default function About() {
         </motion.div>
       </div>
     </section>
-  );
-}
-
-function FactCell({ label, value }) {
-  const { ref, onMove, onLeave } = use3DTilt();
-  return (
-    <div
-      ref={ref}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      className="glass-card"
-      style={{
-        padding: '1.25rem',
-        cursor: 'default',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
-      <p className="label" style={{ marginBottom: '0.45rem', color: 'var(--text-3)', fontSize: '0.54rem' }}>{label}</p>
-      <p style={{ color: 'var(--text)', fontSize: 'var(--fs-sm)', fontWeight: 500, lineHeight: 1.4 }}>{value}</p>
-    </div>
   );
 }
