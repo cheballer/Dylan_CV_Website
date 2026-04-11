@@ -97,7 +97,18 @@ export default function Experience() {
 
             <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', marginBottom: '1rem' }}>
               <div>
-                <p className="label" style={{ marginBottom: '0.6rem' }}>{HOLLARD.period}</p>
+                {/* Period + live pulse indicator */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.6rem' }}>
+                  <motion.div
+                    animate={{ opacity: [1, 0.15, 1] }}
+                    transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                    style={{
+                      width: '5px', height: '5px', borderRadius: '50%',
+                      background: 'var(--text)', flexShrink: 0,
+                    }}
+                  />
+                  <p className="label">{HOLLARD.period}</p>
+                </div>
                 <h3 style={{
                   fontFamily: 'var(--font-display), serif',
                   fontSize: 'clamp(1.75rem, 3.5vw, 3.25rem)',
@@ -108,14 +119,23 @@ export default function Experience() {
                 </h3>
                 <p className="label" style={{ marginTop: '0.4rem' }}>{HOLLARD.via}</p>
               </div>
-              <span style={{
-                fontFamily: 'var(--font-mono)', fontSize: '0.6rem',
-                letterSpacing: '0.14em', textTransform: 'uppercase',
-                color: 'var(--text-2)', border: '1px solid var(--border-2)',
-                padding: '0.35rem 0.75rem', whiteSpace: 'nowrap',
-              }}>
-                Client Engagement
-              </span>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
+                <span style={{
+                  fontFamily: 'var(--font-mono)', fontSize: '0.6rem',
+                  letterSpacing: '0.14em', textTransform: 'uppercase',
+                  color: 'var(--text-2)', border: '1px solid var(--border-2)',
+                  padding: '0.35rem 0.75rem', whiteSpace: 'nowrap',
+                }}>
+                  Client Engagement
+                </span>
+                <span style={{
+                  fontFamily: 'var(--font-mono)', fontSize: '0.55rem',
+                  letterSpacing: '0.16em', textTransform: 'uppercase',
+                  color: 'var(--text-3)',
+                }}>
+                  PIPELINE: ACTIVE
+                </span>
+              </div>
             </div>
 
             <p style={{ color: 'var(--text)', fontSize: 'var(--fs-md)', lineHeight: 1.65, maxWidth: '58ch', marginBottom: '1.5rem' }}>

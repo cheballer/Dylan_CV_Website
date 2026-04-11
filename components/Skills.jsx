@@ -22,7 +22,7 @@ const CATEGORIES = [
 export default function Skills() {
   return (
     <section id="skills" style={{ borderTop: '1px solid var(--border)' }}>
-      {/* ── Marquee bands — appear before the section content ──────── */}
+      {/* ── Marquee bands ──────────────────────────────────────────── */}
       <div style={{ padding: 'clamp(3rem, 6vw, 5rem) 0 0' }}>
         <TextBand items={ROW1} speed={24} direction={1}  />
         <TextBand items={ROW2} speed={20} direction={-1} bordered={false} />
@@ -60,6 +60,7 @@ export default function Skills() {
               }}
               className="md:grid-cols-12"
             >
+              {/* Label column */}
               <div
                 className="md:col-span-4"
                 style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem' }}
@@ -71,18 +72,46 @@ export default function Skills() {
                 }}>
                   {cat.label}
                 </h3>
+                {/* Skill count badge */}
+                <span style={{
+                  fontFamily: 'var(--font-mono)', fontSize: '0.52rem',
+                  letterSpacing: '0.15em', textTransform: 'uppercase',
+                  color: 'var(--text-3)',
+                  border: '1px solid var(--border)',
+                  padding: '0.15rem 0.45rem',
+                  marginLeft: '0.25rem',
+                }}>
+                  {cat.skills.length}
+                </span>
               </div>
+
+              {/* Skills column */}
               <div
                 className="md:col-span-8"
-                style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem 2.5rem' }}
+                style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem 2.5rem', alignItems: 'center' }}
               >
-                {cat.skills.map((s) => (
+                {cat.skills.map((s, j) => (
                   <motion.span
                     key={s}
                     whileHover={{ color: 'var(--text)' }}
                     transition={{ duration: 0.2 }}
-                    style={{ color: 'var(--text-2)', fontSize: 'var(--fs-base)', fontWeight: 400, cursor: 'default' }}
+                    style={{
+                      color: 'var(--text-2)', fontSize: 'var(--fs-base)',
+                      fontWeight: 400, cursor: 'default',
+                      display: 'flex', alignItems: 'center', gap: '0.4rem',
+                    }}
                   >
+                    {/* Small data node dot for primary skills */}
+                    {i === 0 && j < 3 && (
+                      <motion.span
+                        animate={{ opacity: [0.3, 1, 0.3] }}
+                        transition={{ duration: 2 + j * 0.5, repeat: Infinity, ease: 'easeInOut' }}
+                        style={{
+                          width: '3px', height: '3px', borderRadius: '50%',
+                          background: 'var(--text-3)', display: 'inline-block', flexShrink: 0,
+                        }}
+                      />
+                    )}
                     {s}
                   </motion.span>
                 ))}

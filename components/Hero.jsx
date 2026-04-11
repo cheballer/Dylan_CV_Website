@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import DataGraph from './DataGraph';
 
 const reveal = (delay = 0) => ({
   initial: { clipPath: 'inset(0 0 100% 0)' },
@@ -38,22 +39,28 @@ export default function Hero() {
         }}
       >
         {/* ── Spline: fills the ENTIRE hero section ──────────────────
-            Full screen = the man ascending is always visible.
-            The gradient below determines how much we reveal vs cover.
+            Scale up 1.6× with transform-origin pointing at the
+            center of the 3D scene (where the figure + staircase is)
+            so the interesting content fills the right side.
         ─────────────────────────────────────────────────────────────── */}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
+        <div style={{ position: 'absolute', inset: 0, zIndex: 1, overflow: 'hidden' }}>
           <iframe
             src="https://my.spline.design/ascending-YPo0HtclpiuFcNBoe8Qt40EK/"
             frameBorder="0"
             loading="eager"
             title="Ascending — 3D scene"
-            style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+            style={{
+              width: '100%', height: '100%', border: 'none', display: 'block',
+              /* Zoom into the center of the Spline scene where the figure is */
+              transform: 'scale(1.6)',
+              transformOrigin: '60% 42%',
+            }}
           />
           {/* Cover the "Built with Spline" badge */}
           <div
             style={{
               position: 'absolute', bottom: 0, right: 0,
-              width: '200px', height: '56px',
+              width: '220px', height: '60px',
               background: '#070707', zIndex: 2, pointerEvents: 'none',
             }}
           />
@@ -81,6 +88,19 @@ export default function Hero() {
             background: 'linear-gradient(to top, rgba(7,7,7,0.85) 0%, transparent 100%)',
           }}
         />
+
+        {/* ── Data pipeline graph — right side data artifact ──────── */}
+        <div style={{
+          position: 'absolute',
+          right: 0,
+          top: '10%',
+          width: '44%',
+          height: '80%',
+          zIndex: 3,
+          pointerEvents: 'none',
+        }}>
+          <DataGraph />
+        </div>
 
         {/* ── Text overlay ─────────────────────────────────────────── */}
         <div
