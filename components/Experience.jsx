@@ -1,7 +1,9 @@
 'use client';
 
+import { useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 
+/* ── Data ───────────────────────────────────────────────────── */
 const HOLLARD = {
   period:  '2026 — Present',
   client:  'Hollard Insurance',
@@ -42,149 +44,212 @@ const INTERNAL = [
   },
 ];
 
-const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
-const up = {
-  hidden: { opacity: 0, y: 22 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] } },
-};
-const slideIn = (from = 'left') => ({
-  hidden: { opacity: 0, x: from === 'left' ? -30 : 30 },
-  show:   { opacity: 1, x: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } },
+/* ── Animations ─────────────────────────────────────────────── */
+const stagger  = { hidden: {}, show: { transition: { staggerChildren: 0.09 } } };
+const up       = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } } };
+const slideIn  = (from = 'left') => ({
+  hidden: { opacity: 0, x: from === 'left' ? -32 : 32 },
+  show:   { opacity: 1, x: 0, transition: { duration: 0.95, ease: [0.16, 1, 0.3, 1] } },
 });
 
+/* ── 3D tilt hook ───────────────────────────────────────────── */
+function use3DTilt(strength = 8) {
+  const ref = useRef(null);
+  const onMove = useCallback((e) => {
+    const el = ref.current; if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width  - 0.5;
+    const y = (e.clientY - r.top)  / r.height - 0.5;
+    el.style.transform = `perspective(900px) rotateX(${-y * strength}deg) rotateY(${x * strength}deg) translateY(-6px) scale(1.01)`;
+  }, [strength]);
+  const onLeave = useCallback(() => {
+    if (ref.current) ref.current.style.transform = '';
+  }, []);
+  return { ref, onMove, onLeave };
+}
+
+/* ── Internal tool card ─────────────────────────────────────── */
+function ToolCard({ job }) {
+  const { ref, onMove, onLeave } = use3DTilt(7);
+  return (
+    <div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      className="glass-card"
+      style={{ padding: '2.25rem', cursor: 'default', position: 'relative', overflow: 'hidden' }}
+    >
+      {/* Purple top edge glow */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: '2px',
+        background: 'linear-gradient(to right, transparent, rgba(124,58,237,0.7), transparent)',
+      }} />
+
+      <p className="label" style={{ marginBottom: '1rem', color: 'var(--accent-3)', opacity: 0.7 }}>
+        {job.period}
+      </p>
+      <h4 style={{
+        fontSize: 'clamp(1.05rem, 1.8vw, 1.35rem)',
+        fontWeight: 700, color: 'var(--text)',
+        letterSpacing: '-0.02em', lineHeight: 1.3, marginBottom: '1.5rem',
+      }}>
+        {job.title}
+      </h4>
+      <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', marginBottom: '1.5rem' }}>
+        {job.bullets.map((b, j) => (
+          <li key={j} style={{ display: 'flex', gap: '0.85rem', color: 'var(--text-2)', fontSize: 'var(--fs-base)', lineHeight: 1.7 }}>
+            <span style={{ color: 'var(--accent)', flexShrink: 0, marginTop: '0.5em', fontSize: '0.55rem' }}>◆</span>
+            {b}
+          </li>
+        ))}
+      </ul>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+        {job.tags.map((t) => <span key={t} className="tech-pill">{t}</span>)}
+      </div>
+    </div>
+  );
+}
+
+/* ── Main component ─────────────────────────────────────────── */
 export default function Experience() {
   return (
     <section id="experience" className="section-pad" style={{ borderTop: '1px solid var(--border)' }}>
       <div className="container-wide">
         <motion.div
-          initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }}
+          initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.04 }}
           variants={stagger}
         >
-          <motion.div variants={up} className="section-num" style={{ marginBottom: '3rem' }}>
+          <motion.div variants={up} className="section-num" style={{ marginBottom: '3.5rem' }}>
             02 / Experience
           </motion.div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2.5rem', marginBottom: '4.5rem' }}
+          {/* Section heading */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2.5rem', marginBottom: '5rem' }}
             className="lg:grid-cols-12">
             <motion.h2 variants={up} className="h-section lg:col-span-4">Work</motion.h2>
             <motion.p variants={up} className="lg:col-span-8"
-              style={{ fontSize: 'var(--fs-md)', color: 'var(--text-2)', lineHeight: 1.75, maxWidth: '52ch' }}>
+              style={{ fontSize: 'var(--fs-lg)', color: 'var(--text-2)', lineHeight: 1.8, maxWidth: '52ch', fontWeight: 300, alignSelf: 'flex-end' }}>
               Client-facing enterprise data engineering — and internal tooling built from scratch.
             </motion.p>
           </div>
 
-          {/* ── Hollard — feature entry ─────────────────────────────── */}
-          <motion.article
-            variants={slideIn('left')}
-            whileHover={{ x: 4 }}
-            transition={{ duration: 0.4 }}
-            style={{
-              borderLeft: '2px solid var(--accent)',
-              paddingLeft: '2rem',
-              marginBottom: '4rem',
-              position: 'relative',
-            }}
-          >
-            {/* Accent glow on border */}
-            <div style={{
-              position: 'absolute', left: -2, top: 0, bottom: 0, width: '2px',
-              background: 'var(--accent)',
-              boxShadow: '0 0 12px var(--accent-glow)',
-            }} />
+          {/* ── Hollard feature card ───────────────────────────────── */}
+          <motion.div variants={slideIn('left')} style={{ marginBottom: '5rem' }}>
+            <HollardCard />
+          </motion.div>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', marginBottom: '1.1rem' }}>
-              <div>
-                {/* Period with pulsing live dot */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.6rem' }}>
-                  <motion.div
-                    animate={{ opacity: [1, 0.15, 1], boxShadow: ['0 0 4px var(--accent)', '0 0 0px transparent', '0 0 4px var(--accent)'] }}
-                    transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-                    style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }}
-                  />
-                  <p className="label" style={{ color: 'var(--text-2)' }}>{HOLLARD.period}</p>
-                </div>
-                <h3 style={{
-                  fontFamily: 'var(--font-display), serif',
-                  fontSize: 'clamp(1.75rem, 3.5vw, 3.25rem)',
-                  fontWeight: 600, fontStyle: 'italic',
-                  letterSpacing: '-0.02em', lineHeight: 1.05, color: 'var(--text)',
-                }}>
-                  {HOLLARD.client}
-                </h3>
-                <p className="label" style={{ marginTop: '0.4rem', color: 'var(--text-3)' }}>{HOLLARD.via}</p>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
-                <span style={{
-                  fontFamily: 'var(--font-mono)', fontSize: '0.58rem',
-                  letterSpacing: '0.14em', textTransform: 'uppercase',
-                  color: 'var(--text-2)', border: '1px solid var(--border-2)',
-                  padding: '0.35rem 0.75rem', whiteSpace: 'nowrap',
-                }}>
-                  Client Engagement
-                </span>
-                <span style={{
-                  fontFamily: 'var(--font-mono)', fontSize: '0.52rem',
-                  letterSpacing: '0.18em', textTransform: 'uppercase',
-                  color: 'var(--accent)',
-                }}>
-                  PIPELINE: ACTIVE
-                </span>
-              </div>
-            </div>
-
-            <p style={{ color: 'var(--text-2)', fontSize: 'var(--fs-md)', lineHeight: 1.75, maxWidth: '58ch', marginBottom: '1.5rem' }}>
-              {HOLLARD.about}
-            </p>
-            <div style={{ height: '1px', background: 'var(--border)', marginBottom: '1.25rem' }} />
-            <p className="label" style={{ marginBottom: '0.85rem', color: 'var(--text-2)' }}>{HOLLARD.role}</p>
-            <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', marginBottom: '1.5rem' }}>
-              {HOLLARD.bullets.map((b, i) => (
-                <li key={i} style={{ display: 'flex', gap: '0.85rem', color: 'var(--text-2)', fontSize: 'var(--fs-base)', lineHeight: 1.7 }}>
-                  <span style={{ color: 'var(--accent)', flexShrink: 0, marginTop: '0.55em', fontSize: '0.6rem' }}>▸</span>
-                  {b}
-                </li>
-              ))}
-            </ul>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
-              {HOLLARD.tags.map((t) => <span key={t} className="tech-pill">{t}</span>)}
-            </div>
-          </motion.article>
-
-          {/* ── Internal projects ──────────────────────────────────── */}
-          <motion.div variants={up} style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-            <h3 className="h-sub">Internal Tooling</h3>
+          {/* ── Internal tooling ──────────────────────────────────── */}
+          <motion.div variants={up} style={{
+            display: 'flex', alignItems: 'baseline',
+            justifyContent: 'space-between', marginBottom: '2rem',
+          }}>
+            <h3 className="h-sub" style={{ fontSize: 'var(--fs-2xl)' }}>Internal Tooling</h3>
             <span className="label" style={{ color: 'var(--text-3)' }}>Convergenc3</span>
           </motion.div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1px', background: 'var(--border)' }} className="md:grid-cols-2">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.25rem' }}
+            className="md:grid-cols-2">
             {INTERNAL.map((job, i) => (
-              <motion.article
-                key={i}
-                variants={slideIn(i === 0 ? 'left' : 'right')}
-                whileHover={{ y: -3 }}
-                transition={{ duration: 0.35 }}
-                className="card"
-              >
-                <p className="label" style={{ marginBottom: '0.85rem', color: 'var(--text-3)' }}>{job.period}</p>
-                <h4 style={{ fontSize: 'var(--fs-lg)', fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.01em', lineHeight: 1.3, marginBottom: '1rem' }}>
-                  {job.title}
-                </h4>
-                <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', marginBottom: '1rem' }}>
-                  {job.bullets.map((b, j) => (
-                    <li key={j} style={{ display: 'flex', gap: '0.85rem', color: 'var(--text-2)', fontSize: 'var(--fs-base)', lineHeight: 1.7 }}>
-                      <span style={{ color: 'var(--accent)', flexShrink: 0, marginTop: '0.55em', fontSize: '0.6rem' }}>▸</span>
-                      {b}
-                    </li>
-                  ))}
-                </ul>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
-                  {job.tags.map((t) => <span key={t} className="tech-pill">{t}</span>)}
-                </div>
-              </motion.article>
+              <motion.div key={i} variants={slideIn(i === 0 ? 'left' : 'right')}>
+                <ToolCard job={job} />
+              </motion.div>
             ))}
           </div>
+
         </motion.div>
       </div>
     </section>
+  );
+}
+
+/* ── Hollard large feature card ─────────────────────────────── */
+function HollardCard() {
+  const { ref, onMove, onLeave } = use3DTilt(4);
+  return (
+    <div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      className="glass-card"
+      style={{ padding: 'clamp(2rem, 4vw, 3rem)', cursor: 'default', position: 'relative', overflow: 'hidden' }}
+    >
+      {/* Large ambient purple blur behind card content */}
+      <div style={{
+        position: 'absolute', top: '-30%', right: '-10%',
+        width: '50%', height: '130%',
+        background: 'radial-gradient(ellipse, rgba(109,40,217,0.09) 0%, transparent 65%)',
+        pointerEvents: 'none',
+      }} />
+
+      {/* Top accent line */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: '2px',
+        background: 'linear-gradient(to right, var(--accent), rgba(124,58,237,0.2), transparent)',
+      }} />
+
+      {/* Header */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1.5rem', marginBottom: '1.5rem' }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.8rem' }}>
+            <motion.div
+              animate={{ opacity: [1, 0.2, 1], boxShadow: ['0 0 5px var(--accent)', '0 0 0px transparent', '0 0 5px var(--accent)'] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+              style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }}
+            />
+            <p className="label" style={{ color: 'var(--text-2)' }}>{HOLLARD.period}</p>
+          </div>
+          <h3 style={{
+            fontFamily: 'var(--font-display), serif',
+            fontSize: 'clamp(2rem, 4vw, 3.5rem)',
+            fontWeight: 600, fontStyle: 'italic',
+            letterSpacing: '-0.02em', lineHeight: 1.05, color: 'var(--text)',
+          }}>
+            {HOLLARD.client}
+          </h3>
+          <p className="label" style={{ marginTop: '0.5rem', color: 'var(--text-3)' }}>{HOLLARD.via}</p>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.6rem' }}>
+          <span style={{
+            fontFamily: 'var(--font-mono)', fontSize: '0.58rem',
+            letterSpacing: '0.14em', textTransform: 'uppercase',
+            color: 'var(--text-2)', border: '1px solid var(--border-2)',
+            padding: '0.4rem 0.85rem', background: 'rgba(124,58,237,0.06)',
+          }}>
+            Client Engagement
+          </span>
+          <span style={{
+            fontFamily: 'var(--font-mono)', fontSize: '0.52rem',
+            letterSpacing: '0.2em', textTransform: 'uppercase',
+            color: 'var(--accent-3)',
+            textShadow: '0 0 10px rgba(139,92,246,0.4)',
+          }}>
+            ● PIPELINE: ACTIVE
+          </span>
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div style={{ height: '1px', background: 'var(--border)', margin: '1.5rem 0' }} />
+
+      <p style={{ color: 'var(--text-2)', fontSize: 'var(--fs-md)', lineHeight: 1.8, maxWidth: '60ch', marginBottom: '1.75rem', fontWeight: 300 }}>
+        {HOLLARD.about}
+      </p>
+
+      <p className="label" style={{ marginBottom: '1rem', color: 'var(--accent-3)', opacity: 0.8 }}>{HOLLARD.role}</p>
+
+      <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginBottom: '1.75rem' }}>
+        {HOLLARD.bullets.map((b, i) => (
+          <li key={i} style={{ display: 'flex', gap: '1rem', color: 'var(--text-2)', fontSize: 'var(--fs-base)', lineHeight: 1.75 }}>
+            <span style={{ color: 'var(--accent)', flexShrink: 0, marginTop: '0.5em', fontSize: '0.55rem' }}>◆</span>
+            {b}
+          </li>
+        ))}
+      </ul>
+
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}>
+        {HOLLARD.tags.map((t) => <span key={t} className="tech-pill">{t}</span>)}
+      </div>
+    </div>
   );
 }

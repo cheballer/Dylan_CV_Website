@@ -13,10 +13,9 @@ export default function GridBackground() {
 
   useEffect(() => {
     const onScroll = () => {
-      // Hero wrapper is 200vh; sticky pin releases after 100vh of scroll.
-      // Start fading in at 80vh, fully visible by 140vh.
-      const vh = window.innerHeight;
-      const raw = (window.scrollY - vh * 0.8) / (vh * 0.6);
+      // Start fading in at 70vh, fully visible by 120vh.
+      const vh  = window.innerHeight;
+      const raw = (window.scrollY - vh * 0.7) / (vh * 0.5);
       setOpacity(Math.min(1, Math.max(0, raw)));
     };
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -36,22 +35,22 @@ export default function GridBackground() {
       }}
     >
       <GridScan
-        /* Grid lines — very dark indigo, barely visible against #07090F */
-        linesColor="#0e1830"
-        /* Scan sweep — blue-violet pulse */
-        scanColor="#6d28d9"
-        scanOpacity={0.55}
-        scanGlow={0.9}
-        scanSoftness={2.8}
-        scanDuration={4.0}
-        scanDelay={6.0}
+        /* Grid lines — slightly lighter indigo for visibility */
+        linesColor="#111840"
+        /* Scan sweep — purple pulse */
+        scanColor="#7C3AED"
+        scanOpacity={0.75}
+        scanGlow={1.15}
+        scanSoftness={2.6}
+        scanDuration={4.2}
+        scanDelay={5.5}
         scanDirection="forward"
-        scanPhaseTaper={0.35}
+        scanPhaseTaper={0.32}
 
         gridScale={0.13}
-        lineThickness={1.1}
+        lineThickness={1.25}
         lineJitter={0.04}
-        noiseIntensity={0.004}
+        noiseIntensity={0.005}
 
         sensitivity={0.22}
         snapBackDelay={600}

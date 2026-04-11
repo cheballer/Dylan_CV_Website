@@ -13,13 +13,11 @@ const LINKS = [
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
-  const [active, setActive] = useState('');
+  const [active, setActive]     = useState('');
 
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 60);
-
-      // Active section detection
       const sections = LINKS.map((l) => ({
         id: l.href.slice(1),
         el: document.getElementById(l.href.slice(1)),
@@ -49,11 +47,16 @@ export default function Nav() {
         position: 'fixed',
         top: 0, left: 0, right: 0,
         zIndex: 50,
-        transition: 'background 0.5s ease, border-color 0.5s ease',
-        background: scrolled ? 'rgba(7,9,15,0.88)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(14px) saturate(1.3)' : 'none',
-        WebkitBackdropFilter: scrolled ? 'blur(14px) saturate(1.3)' : 'none',
-        borderBottom: scrolled ? '1px solid var(--border)' : '1px solid transparent',
+        transition: 'background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease',
+        background: scrolled
+          ? 'rgba(7, 9, 16, 0.82)'
+          : 'transparent',
+        backdropFilter: scrolled ? 'blur(20px) saturate(1.4)' : 'none',
+        WebkitBackdropFilter: scrolled ? 'blur(20px) saturate(1.4)' : 'none',
+        borderBottom: scrolled
+          ? '1px solid rgba(124, 58, 237, 0.18)'
+          : '1px solid transparent',
+        boxShadow: scrolled ? '0 4px 32px rgba(124, 58, 237, 0.08)' : 'none',
       }}
     >
       <div
@@ -61,7 +64,7 @@ export default function Nav() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          height: '3.75rem',
+          height: '4rem',
           maxWidth: '1280px',
           margin: '0 auto',
           padding: '0 var(--pad)',
@@ -73,21 +76,31 @@ export default function Nav() {
           onClick={(e) => go(e, '#hero')}
           style={{
             fontFamily: 'var(--font-display), serif',
-            fontSize: '1.2rem',
+            fontSize: '1.25rem',
             fontWeight: 600,
             fontStyle: 'italic',
             letterSpacing: '-0.02em',
             color: 'var(--text)',
-            display: 'flex', alignItems: 'center', gap: '0.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.45rem',
           }}
         >
           DC
-          <span
+          {/* Purple glow dot */}
+          <motion.span
+            animate={{
+              boxShadow: [
+                '0 0 5px rgba(124,58,237,0.8)',
+                '0 0 12px rgba(124,58,237,1)',
+                '0 0 5px rgba(124,58,237,0.8)',
+              ],
+            }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
             style={{
-              width: '4px', height: '4px', borderRadius: '50%',
+              width: '5px', height: '5px', borderRadius: '50%',
               background: 'var(--accent)',
               display: 'inline-block',
-              boxShadow: '0 0 6px var(--accent)',
             }}
           />
         </a>
@@ -102,7 +115,11 @@ export default function Nav() {
                 href={href}
                 onClick={(e) => go(e, href)}
                 className="nav-link hidden md:block"
-                style={{ color: isActive ? 'var(--accent)' : undefined }}
+                style={{
+                  color: isActive ? 'var(--accent-3)' : undefined,
+                  textShadow: isActive ? '0 0 12px rgba(139, 92, 246, 0.5)' : 'none',
+                  transition: 'color 0.2s, text-shadow 0.2s',
+                }}
               >
                 {label}
               </a>
@@ -110,7 +127,7 @@ export default function Nav() {
           })}
         </nav>
 
-        {/* Resume */}
+        {/* Resume button */}
         <a
           href="/cv.pdf"
           download
@@ -118,18 +135,20 @@ export default function Nav() {
           style={{
             fontFamily: 'var(--font-mono)', fontSize: '0.62rem',
             letterSpacing: '0.18em', textTransform: 'uppercase',
-            color: 'var(--accent)',
-            border: '1px solid var(--border-2)',
-            padding: '0.4rem 0.9rem',
-            transition: 'background 0.2s, box-shadow 0.2s',
+            color: 'var(--accent-3)',
+            border: '1px solid rgba(124, 58, 237, 0.35)',
+            padding: '0.45rem 1rem',
+            transition: 'background 0.2s, box-shadow 0.2s, border-color 0.2s',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'var(--accent-dim)';
-            e.currentTarget.style.boxShadow = '0 0 12px var(--accent-dim)';
+            e.currentTarget.style.background = 'rgba(124, 58, 237, 0.12)';
+            e.currentTarget.style.boxShadow = '0 0 18px rgba(124, 58, 237, 0.25)';
+            e.currentTarget.style.borderColor = 'rgba(124, 58, 237, 0.6)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = 'transparent';
             e.currentTarget.style.boxShadow = 'none';
+            e.currentTarget.style.borderColor = 'rgba(124, 58, 237, 0.35)';
           }}
         >
           Resume ↓

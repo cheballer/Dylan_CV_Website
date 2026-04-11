@@ -107,23 +107,23 @@ export default function ParticleCanvas() {
       purple: Math.random() > 0.5, // some lines purple, some blue
     }));
 
-    // Ambient background glow — upper-left purple, lower-right blue
+    // Ambient background glow — deep purple chaos → violet structure
     const drawAmbientGlow = (ep) => {
-      // Purple glow (chaotic state) — fades as scroll increases
-      const purpleA = (1 - ep) * 0.12;
+      // Deep purple glow (chaotic state)
+      const purpleA = (1 - ep) * 0.18;
       if (purpleA > 0.005) {
-        const pg = ctx.createRadialGradient(W * 0.2, H * 0.3, 0, W * 0.2, H * 0.3, W * 0.55);
+        const pg = ctx.createRadialGradient(W * 0.2, H * 0.3, 0, W * 0.2, H * 0.3, W * 0.6);
         pg.addColorStop(0, `rgba(109, 40, 217, ${purpleA})`);
         pg.addColorStop(1, 'rgba(109, 40, 217, 0)');
         ctx.fillStyle = pg;
         ctx.fillRect(0, 0, W, H);
       }
-      // Cyan glow (structured state) — fades in as scroll increases
-      const cyanA = ep * 0.09;
-      if (cyanA > 0.005) {
-        const cg = ctx.createRadialGradient(W * 0.72, H * 0.42, 0, W * 0.72, H * 0.42, W * 0.4);
-        cg.addColorStop(0, `rgba(56, 189, 248, ${cyanA})`);
-        cg.addColorStop(1, 'rgba(56, 189, 248, 0)');
+      // Violet/lavender glow (structured state)
+      const violetA = ep * 0.14;
+      if (violetA > 0.005) {
+        const cg = ctx.createRadialGradient(W * 0.72, H * 0.42, 0, W * 0.72, H * 0.42, W * 0.45);
+        cg.addColorStop(0, `rgba(139, 92, 246, ${violetA})`);
+        cg.addColorStop(1, 'rgba(139, 92, 246, 0)');
         ctx.fillStyle = cg;
         ctx.fillRect(0, 0, W, H);
       }
@@ -165,15 +165,15 @@ export default function ParticleCanvas() {
         });
       }
 
-      // ── Network edges — fade in, purple→cyan ─────────────────
+      // ── Network edges — fade in, deep purple→lavender ────────
       const edgeAlpha = Math.max(0, Math.min(1, (ep - 0.2) / 0.55));
       if (edgeAlpha > 0.01) {
         EDGES.forEach(([a, b]) => {
           const pa = npos[a];
           const pb = npos[b];
-          // Colour lerps purple → cyan as ep increases
-          const r1 = 124, g1 = 58,  b1 = 237; // purple
-          const r2 = 56,  g2 = 189, b2 = 248; // cyan
+          // Colour lerps deep purple → lavender as ep increases
+          const r1 = 109, g1 = 40,  b1 = 217; // deep purple
+          const r2 = 167, g2 = 139, b2 = 250; // lavender
           const er = Math.round(lerp(r1, r2, ep));
           const eg = Math.round(lerp(g1, g2, ep));
           const eb = Math.round(lerp(b1, b2, ep));
@@ -190,41 +190,41 @@ export default function ParticleCanvas() {
         });
       }
 
-      // ── Background particles — purple/blue blend, fade with scroll ──
+      // ── Background particles — all purple/violet tones ───────
       bgs.forEach((p) => {
         p.x += p.vx;
         p.y += p.vy;
         if (p.x < 0 || p.x > W) p.vx *= -1;
         if (p.y < 0 || p.y > H) p.vy *= -1;
-        const a = (1 - ep * 0.8) * 0.52;
+        const a = (1 - ep * 0.8) * 0.55;
         if (a < 0.01) return;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        // Purple particles stay purple; blue ones shift toward cyan with scroll
+        // Both hues stay in the purple/violet family; "blue" shifts toward lavender
         const col = p.hue === 'purple'
-          ? `rgba(167, 139, 250, ${a})`                                      // violet
-          : lerpRGB(96, 165, 250, 56, 189, 248, a, ep);                      // blue → cyan
+          ? `rgba(167, 139, 250, ${a})`                                      // lavender
+          : lerpRGB(124, 58, 237, 196, 181, 253, a, ep);                     // purple → soft lavender
         ctx.fillStyle = col;
         ctx.fill();
       });
 
-      // ── Network nodes — purple→cyan shift ────────────────────
+      // ── Network nodes — deep purple → lavender shift ──────────
       npos.forEach((p) => {
         const na = 0.2 + ep * 0.8;
         const r  = 2 + ep * 3.2;
 
-        // Node colour: purple at ep=0, cyan at ep=1
-        const nr = Math.round(lerp(109, 56,  ep));
-        const ng = Math.round(lerp(40,  189, ep));
-        const nb = Math.round(lerp(217, 248, ep));
+        // Node colour: deep purple at ep=0, lavender at ep=1
+        const nr = Math.round(lerp(109, 196, ep));
+        const ng = Math.round(lerp(40,  181, ep));
+        const nb = Math.round(lerp(217, 253, ep));
 
         // Outer glow
         if (ep > 0.06) {
-          const glowR = Math.round(lerp(139, 56,  ep));
-          const glowG = Math.round(lerp(92,  189, ep));
-          const glowB = Math.round(lerp(246, 248, ep));
+          const glowR = Math.round(lerp(124, 167, ep));
+          const glowG = Math.round(lerp(58,  139, ep));
+          const glowB = Math.round(lerp(237, 250, ep));
           const glow  = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 9);
-          glow.addColorStop(0, `rgba(${glowR},${glowG},${glowB},${ep * 0.18})`);
+          glow.addColorStop(0, `rgba(${glowR},${glowG},${glowB},${ep * 0.22})`);
           glow.addColorStop(1, `rgba(${glowR},${glowG},${glowB},0)`);
           ctx.beginPath();
           ctx.arc(p.x, p.y, r * 9, 0, Math.PI * 2);
