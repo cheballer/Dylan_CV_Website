@@ -130,21 +130,20 @@ export default function SectionNav() {
                   )}
                 </AnimatePresence>
 
-                {/* Dot */}
+                {/* Dot — diamond when active, circle when inactive */}
                 <motion.div
                   animate={{
                     width:     isActive ? '8px' : '4px',
                     height:    isActive ? '8px' : '4px',
                     background: isActive ? 'var(--p4)' : 'var(--text-4)',
+                    borderRadius: isActive ? '1px' : '50%',
+                    rotate:    isActive ? 45 : 0,
                     boxShadow: isActive
                       ? '0 0 10px rgba(139,92,246,0.8), 0 0 4px rgba(167,139,250,0.4)'
                       : 'none',
                   }}
-                  transition={{ duration: 0.25 }}
-                  style={{
-                    borderRadius: '50%',
-                    flexShrink: 0,
-                  }}
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  style={{ flexShrink: 0 }}
                 />
               </button>
             );

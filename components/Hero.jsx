@@ -1,33 +1,27 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import ParticleCanvas from './ParticleCanvas';
+import SystemGraph from './SystemGraph';
 
-/* Load-in animation variants */
 const fade = (delay = 0) => ({
-  initial: { opacity: 0, y: 18, filter: 'blur(4px)' },
+  initial: { opacity: 0, y: 16, filter: 'blur(3px)' },
   animate: {
     opacity: 1, y: 0, filter: 'blur(0px)',
-    transition: { duration: 1, ease: [0.16, 1, 0.3, 1], delay },
-  },
-});
-
-const clipReveal = (delay = 0) => ({
-  initial: { clipPath: 'inset(0 0 100% 0)' },
-  animate: {
-    clipPath: 'inset(0 0 0% 0)',
-    transition: { duration: 1.3, ease: [0.76, 0, 0.24, 1], delay },
+    transition: { duration: 1.0, ease: [0.16, 1, 0.3, 1], delay },
   },
 });
 
 export default function Hero() {
   const wrapRef = useRef(null);
-
-  // Scroll-driven parallax for text content
   const { scrollY } = useScroll();
-  const textY     = useTransform(scrollY, [0, 600], [0, -80]);
-  const textOpacity = useTransform(scrollY, [0, 500], [1, 0]);
+
+  // text parallaxes upward slightly on scroll
+  const textY       = useTransform(scrollY, [0, 500], [0, -60]);
+  const textOpacity = useTransform(scrollY, [0, 380], [1, 0]);
+  // graph stays slightly longer
+  const graphY      = useTransform(scrollY, [0, 600], [0, -40]);
+  const graphOpacity = useTransform(scrollY, [0, 450], [1, 0]);
 
   const scrollTo = (id) => (e) => {
     e.preventDefault();
@@ -35,128 +29,111 @@ export default function Hero() {
   };
 
   return (
-    /* 200vh wrapper — hero stays sticky for the first 100vh of scroll */
+    /* 200vh tall — hero section stays pinned for first 100vh of scroll */
     <div ref={wrapRef} style={{ height: '200vh' }}>
       <section
         id="hero"
         style={{
-          position: 'sticky',
-          top: 0,
-          height: '100vh',
-          overflow: 'hidden',
+          position: 'sticky', top: 0,
+          height: '100vh', overflow: 'hidden',
           background: 'var(--bg)',
         }}
       >
-        {/* ── Particle network canvas ───────────────────────── */}
-        <ParticleCanvas />
 
-        {/* ── Atmospheric purple glow — upper right ─────────── */}
+        {/* ── Subtle ambient depth gradient ──────────────── */}
         <div style={{
-          position: 'absolute', top: '-25%', right: '-12%',
-          width: '70%', height: '100%',
-          background: 'radial-gradient(ellipse at 60% 40%, rgba(109,40,217,0.13) 0%, rgba(124,58,237,0.05) 45%, transparent 70%)',
-          pointerEvents: 'none', zIndex: 1,
+          position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
+          background: [
+            'radial-gradient(ellipse 80% 60% at 75% 50%, rgba(109,40,217,0.09) 0%, transparent 65%)',
+            'radial-gradient(ellipse 50% 80% at 15% 60%, rgba(6,6,11,0.95) 0%, transparent 70%)',
+          ].join(', '),
         }} />
 
-        {/* Small cyan spark — deep right */}
-        <div style={{
-          position: 'absolute', bottom: '10%', right: '25%',
-          width: '25%', height: '35%',
-          background: 'radial-gradient(ellipse, rgba(34,211,238,0.05) 0%, transparent 65%)',
-          pointerEvents: 'none', zIndex: 1,
-        }} />
-
-        {/* ── Left text-mask gradient ───────────────────────── */}
+        {/* ── Left-side text mask (ensures readability) ────── */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
-          background: [
-            'linear-gradient(to right,',
-            '  rgba(5,5,8,1.00) 0%,',
-            '  rgba(5,5,8,0.97) 22%,',
-            '  rgba(5,5,8,0.80) 38%,',
-            '  rgba(5,5,8,0.20) 55%,',
-            '  transparent 68%)',
-          ].join(''),
+          background: 'linear-gradient(to right, rgba(6,6,11,1) 0%, rgba(6,6,11,0.96) 28%, rgba(6,6,11,0.6) 50%, transparent 72%)',
         }} />
 
-        {/* Bottom fade into next section */}
+        {/* ── Bottom fade into first section ───────────────── */}
         <div style={{
-          position: 'absolute', bottom: 0, left: 0, right: 0,
-          height: '28%', zIndex: 1, pointerEvents: 'none',
-          background: 'linear-gradient(to top, rgba(5,5,8,1) 0%, rgba(5,5,8,0.6) 60%, transparent 100%)',
+          position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 3,
+          height: '22%', pointerEvents: 'none',
+          background: 'linear-gradient(to top, rgba(6,6,11,1) 0%, rgba(6,6,11,0.5) 55%, transparent 100%)',
         }} />
 
-        {/* ── Text content (scroll-parallax wrapper) ────────── */}
-        <motion.div
-          style={{ y: textY, opacity: textOpacity }}
-          initial={{ opacity: 1, y: 0 }}
-        >
-          <div style={{
-            position: 'absolute', inset: 0, zIndex: 2,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            padding: 'var(--pad)',
-            paddingTop: 'clamp(5rem, 9vw, 8rem)',
-            paddingBottom: '3rem',
-            maxWidth: 'min(700px, 55vw)',
-            pointerEvents: 'none',
-          }}>
+        {/* ══ Main layout grid ════════════════════════════════ */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 2,
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          alignItems: 'center',
+          padding: '0 var(--pad)',
+          paddingTop: '3.5rem', /* nav clearance */
+          maxWidth: 'var(--max-w)',
+          margin: '0 auto',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '100%',
+        }}>
 
-            {/* System status chip */}
-            <motion.div {...fade(0.2)} style={{ marginBottom: '2.75rem' }}>
-              <span style={{
-                display: 'inline-flex', alignItems: 'center', gap: '0.6rem',
+          {/* ── LEFT: text content ────────────────────────── */}
+          <motion.div style={{ y: textY, opacity: textOpacity }}>
+
+            {/* Status line */}
+            <motion.div {...fade(0.25)} style={{ marginBottom: '2rem' }}>
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
                 fontFamily: 'var(--font-mono)',
-                fontSize: 'var(--fs-2xs)',
-                letterSpacing: '0.28em',
+                fontSize: 'var(--fs-xs)',
+                letterSpacing: '0.22em',
                 textTransform: 'uppercase',
-                color: 'var(--p5)',
-                border: '1px solid rgba(124,58,237,0.22)',
-                padding: '0.32rem 0.9rem',
-                background: 'rgba(124,58,237,0.06)',
-                backdropFilter: 'blur(8px)',
+                color: 'var(--text-4)',
               }}>
-                <motion.span
-                  animate={{ opacity: [1, 0.2, 1] }}
-                  transition={{ duration: 1.8, repeat: Infinity }}
-                  style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'var(--p4)', flexShrink: 0 }}
-                />
-                Data Engineer · System Analyst
-              </span>
+                <span style={{
+                  width: '5px', height: '5px', borderRadius: '50%',
+                  background: 'var(--p6)',
+                  animation: 'live-pulse 2.2s ease-in-out infinite',
+                  flexShrink: 0,
+                }} />
+                Data Engineer · Technology Consultant
+              </div>
             </motion.div>
 
-            {/* Name — display serif, massive */}
-            <div style={{ marginBottom: '2.5rem' }}>
-              <div style={{ overflow: 'hidden' }}>
+            {/* Name — massive serif */}
+            <div style={{ marginBottom: '2.5rem', pointerEvents: 'none' }}>
+              <div style={{ overflow: 'hidden', lineHeight: 0.88 }}>
                 <motion.h1
-                  {...clipReveal(0.3)}
+                  initial={{ clipPath: 'inset(0 0 100% 0)' }}
+                  animate={{ clipPath: 'inset(0 0 0% 0)' }}
+                  transition={{ duration: 1.15, ease: [0.76, 0, 0.24, 1], delay: 0.3 }}
                   style={{
                     fontFamily: 'var(--font-display), serif',
                     fontSize: 'var(--fs-hero)',
                     fontWeight: 300,
                     fontStyle: 'italic',
-                    lineHeight: 0.84,
                     letterSpacing: '-0.025em',
                     color: 'var(--text)',
                     display: 'block',
+                    lineHeight: 0.88,
                   }}
                 >
                   Dylan
                 </motion.h1>
               </div>
-              <div style={{ overflow: 'hidden' }}>
+              <div style={{ overflow: 'hidden', lineHeight: 0.88 }}>
                 <motion.span
-                  {...clipReveal(0.45)}
+                  initial={{ clipPath: 'inset(0 0 100% 0)' }}
+                  animate={{ clipPath: 'inset(0 0 0% 0)' }}
+                  transition={{ duration: 1.15, ease: [0.76, 0, 0.24, 1], delay: 0.46 }}
                   style={{
                     fontFamily: 'var(--font-display), serif',
                     fontSize: 'var(--fs-hero)',
                     fontWeight: 700,
-                    lineHeight: 0.84,
                     letterSpacing: '-0.035em',
+                    lineHeight: 0.88,
                     display: 'block',
-                    /* Purple gradient shimmer on family name */
-                    background: 'linear-gradient(120deg, var(--text) 30%, var(--p5) 60%, var(--text) 85%)',
+                    background: 'linear-gradient(115deg, var(--text) 35%, var(--p7) 65%, var(--text) 88%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
@@ -168,35 +145,30 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* Divider */}
-            <motion.div {...fade(0.8)} style={{ marginBottom: '2rem' }}>
+            {/* Divider rule */}
+            <motion.div {...fade(0.85)}>
               <div style={{
-                width: '100%', maxWidth: '24rem', height: '1px',
-                background: 'linear-gradient(to right, rgba(124,58,237,0.6), rgba(124,58,237,0.1), transparent)',
+                width: '100%', maxWidth: '22rem', height: '1px',
+                background: 'linear-gradient(to right, rgba(109,40,217,0.5), rgba(109,40,217,0.08), transparent)',
+                marginBottom: '1.75rem',
               }} />
             </motion.div>
 
             {/* Tagline */}
-            <motion.p {...fade(0.95)} style={{
-              marginBottom: '3rem',
+            <motion.p {...fade(1.0)} style={{
               color: 'var(--text-3)',
-              fontSize: 'var(--fs-lg)',
+              fontSize: 'var(--fs-md)',
               lineHeight: 1.75,
               fontWeight: 300,
-              maxWidth: '36ch',
+              maxWidth: '34ch',
+              marginBottom: '2.5rem',
             }}>
-              Building data systems that turn raw signals
-              into structured intelligence — delivered across enterprise environments.
+              Building data pipelines and systems that turn
+              raw enterprise data into structured, maintained delivery.
             </motion.p>
 
             {/* CTAs */}
-            <motion.div
-              {...fade(1.15)}
-              style={{
-                display: 'flex', gap: '1rem', flexWrap: 'wrap',
-                pointerEvents: 'auto',
-              }}
-            >
+            <motion.div {...fade(1.2)} style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
               <a href="#about" onClick={scrollTo('#about')} className="btn-primary">
                 View Work →
               </a>
@@ -204,67 +176,89 @@ export default function Hero() {
                 Get in Touch
               </a>
             </motion.div>
+          </motion.div>
 
-          </div>
-        </motion.div>
+          {/* ── RIGHT: SystemGraph ─────────────────────────── */}
+          <motion.div
+            style={{ y: graphY, opacity: graphOpacity }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '0 0 0 2rem',
+            }}>
+              <SystemGraph />
+            </div>
+          </motion.div>
+        </div>
 
-        {/* ── Pipeline concept line — bottom ───────────────── */}
+        {/* ── Bottom: concept line + scroll cue ──────────── */}
         <motion.div
-          {...fade(1.6)}
+          {...fade(1.7)}
           style={{
-            position: 'absolute', bottom: '2.75rem', left: 'var(--pad)',
-            zIndex: 2, pointerEvents: 'none',
-            display: 'flex', alignItems: 'center', gap: '0.85rem',
+            position: 'absolute', bottom: '2.5rem', left: 'var(--pad)',
+            zIndex: 4, pointerEvents: 'none',
+            display: 'flex', alignItems: 'center', gap: '1.5rem',
           }}
         >
-          {['SIGNAL', 'PIPELINE', 'STRUCTURE', 'INTELLIGENCE'].map((step, i) => (
-            <span key={step} style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+          {['Source', 'Pipeline', 'Validate', 'Deliver'].map((step, i) => (
+            <span key={step} style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
               <span style={{
                 fontFamily: 'var(--font-mono)',
                 fontSize: 'var(--fs-2xs)',
-                letterSpacing: '0.22em',
+                letterSpacing: '0.2em',
                 textTransform: 'uppercase',
-                color: i === 0 ? 'var(--p5)' : 'var(--text-4)',
-                opacity: i === 0 ? 1 : 0.6 + i * 0.03,
+                color: i === 0 ? 'var(--p7)' : 'var(--text-4)',
+                opacity: i === 0 ? 0.9 : 0.4 + i * 0.05,
               }}>
                 {step}
               </span>
               {i < 3 && (
-                <span style={{ width: '1.5rem', height: '1px', background: 'var(--border-2)', display: 'block' }} />
+                <span style={{
+                  display: 'block',
+                  width: '1.25rem', height: '1px',
+                  background: 'var(--border-2)',
+                }} />
               )}
             </span>
           ))}
         </motion.div>
 
-        {/* ── Location ─────────────────────────────────────── */}
+        {/* Location */}
         <motion.div
-          {...fade(1.7)}
+          {...fade(1.8)}
           style={{
-            position: 'absolute', bottom: '2.75rem', right: 'var(--pad)',
-            zIndex: 2, pointerEvents: 'none',
+            position: 'absolute', bottom: '2.5rem', right: 'var(--pad)',
+            zIndex: 4, pointerEvents: 'none',
           }}
         >
-          <span className="label" style={{ color: 'var(--text-4)' }}>Johannesburg · ZA</span>
+          <span className="label" style={{ color: 'var(--text-4)', opacity: 0.6 }}>
+            Johannesburg · ZA
+          </span>
         </motion.div>
 
-        {/* ── Scroll cue — centre ──────────────────────────── */}
+        {/* Scroll cue — vertical line + dot */}
         <motion.div
-          {...fade(2)}
+          {...fade(2.1)}
           style={{
-            position: 'absolute', bottom: '2.75rem', left: '50%',
+            position: 'absolute', bottom: '2.5rem', left: '50%',
             transform: 'translateX(-50%)',
-            zIndex: 2, pointerEvents: 'none',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.55rem',
+            zIndex: 4, pointerEvents: 'none',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.45rem',
           }}
         >
-          <div style={{ width: '1px', height: '3rem', overflow: 'hidden', background: 'rgba(124,58,237,0.15)' }}>
+          <div style={{ width: '1px', height: '2.5rem', overflow: 'hidden', background: 'rgba(109,40,217,0.12)' }}>
             <motion.div
               animate={{ y: ['-100%', '200%'] }}
-              transition={{ duration: 2.2, repeat: Infinity, ease: 'linear', delay: 2.5 }}
-              style={{ width: '100%', height: '45%', background: 'var(--p4)' }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'linear', delay: 2.5 }}
+              style={{ width: '100%', height: '40%', background: 'var(--p5)' }}
             />
           </div>
-          <span className="label" style={{ color: 'var(--text-4)', fontSize: 'var(--fs-2xs)' }}>scroll</span>
+          <span className="label" style={{ fontSize: 'var(--fs-2xs)', opacity: 0.4 }}>scroll</span>
         </motion.div>
 
       </section>

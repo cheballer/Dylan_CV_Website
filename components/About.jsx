@@ -1,147 +1,62 @@
 'use client';
 
-import { useRef, useEffect, useCallback } from 'react';
-import { motion, useInView, useMotionValue, useTransform, animate } from 'framer-motion';
-import TextBand from './TextBand';
+import { useRef, useCallback } from 'react';
+import { motion } from 'framer-motion';
 
-/* ── Animated counter ───────────────────────────────────────── */
-function Counter({ value, suffix = '' }) {
-  const ref   = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-60px' });
-  const count  = useMotionValue(0);
-  const display = useTransform(count, (v) => Math.round(v) + suffix);
+const up = {
+  hidden:  { opacity: 0, y: 24, filter: 'blur(2px)' },
+  visible: { opacity: 1, y: 0,  filter: 'blur(0px)', transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } },
+};
+const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.09 } } };
 
-  useEffect(() => {
-    if (inView) animate(count, value, { duration: 2.2, ease: [0.16, 1, 0.3, 1] });
-  }, [inView, count, value]);
-
-  return <motion.span ref={ref}>{display}</motion.span>;
-}
-
-/* ── 3D tilt hook ───────────────────────────────────────────── */
-function use3DTilt(strength = 7) {
+function use3DTilt(s = 6) {
   const ref = useRef(null);
   const onMove = useCallback((e) => {
     const el = ref.current; if (!el) return;
-    const r  = el.getBoundingClientRect();
-    const x  = (e.clientX - r.left) / r.width  - 0.5;
-    const y  = (e.clientY - r.top)  / r.height - 0.5;
-    el.style.transform = `perspective(900px) rotateX(${-y * strength}deg) rotateY(${x * strength}deg) translateY(-6px) scale(1.01)`;
-    el.style.transition = 'transform 0.12s ease';
-  }, [strength]);
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width  - 0.5;
+    const y = (e.clientY - r.top)  / r.height - 0.5;
+    el.style.transform  = `perspective(900px) rotateX(${-y*s}deg) rotateY(${x*s}deg) translateY(-4px) scale(1.01)`;
+    el.style.transition = 'transform 0.1s ease';
+  }, [s]);
   const onLeave = useCallback(() => {
     if (ref.current) {
-      ref.current.style.transform = '';
-      ref.current.style.transition = 'transform 0.55s cubic-bezier(0.23,1,0.32,1)';
+      ref.current.style.transform  = '';
+      ref.current.style.transition = 'transform 0.5s cubic-bezier(0.23,1,0.32,1)';
     }
   }, []);
   return { ref, onMove, onLeave };
 }
 
-/* ── Variants ───────────────────────────────────────────────── */
-const up = {
-  hidden:  { opacity: 0, y: 28, filter: 'blur(3px)' },
-  visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] } },
-};
-const stagger = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
-};
-
-const BAND_ITEMS = [
-  'SQL', 'Python', 'ETL Pipelines', 'Data Engineering', 'System Analysis',
-  'RAG Systems', 'MongoDB', 'React', 'Power Automate', 'Machine Learning',
-];
-
-const STATS = [
-  { value: 2,  suffix: '+', label: 'Years Experience'           },
-  { value: 1,  suffix: '',  label: 'Enterprise Client · Hollard' },
-  { value: 3,  suffix: '',  label: 'Systems Built End-to-End'    },
-];
-
-const FACTS = [
-  { label: 'Role',    value: 'Technology Consultant' },
-  { label: 'Company', value: 'Convergenc3'           },
-  { label: 'Client',  value: 'Hollard Insurance'     },
-  { label: 'Study',   value: 'BComputing — 2026'     },
-  { label: 'Based',   value: 'Johannesburg, ZA'      },
-  { label: 'Status',  value: 'Open to opportunities' },
-];
-
-/* ── Stat card ──────────────────────────────────────────────── */
-function StatCard({ stat, index }) {
-  const { ref, onMove, onLeave } = use3DTilt(8);
-  return (
-    <motion.div
-      variants={up}
-      ref={ref}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      className="glass"
-      style={{
-        padding: '2.5rem 2rem',
-        position: 'relative', overflow: 'hidden',
-        cursor: 'default',
-      }}
-    >
-      {/* Gradient top bar */}
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
-        background: `linear-gradient(to right, transparent, rgba(${index === 0 ? '124,58,237' : index === 1 ? '109,40,217' : '139,92,246'},0.6), transparent)`,
-      }} />
-      {/* Number */}
-      <p style={{
-        fontFamily: 'var(--font-sans)',
-        fontWeight: 800,
-        fontSize: 'clamp(3rem, 7vw, 5.5rem)',
-        lineHeight: 1,
-        letterSpacing: '-0.05em',
-        color: 'var(--p5)',
-        textShadow: '0 0 40px rgba(139,92,246,0.3)',
-        marginBottom: '0.75rem',
-      }}>
-        <Counter value={stat.value} suffix={stat.suffix} />
-      </p>
-      <p style={{
-        fontFamily: 'var(--font-mono)',
-        fontSize: 'var(--fs-xs)',
-        letterSpacing: '0.16em',
-        textTransform: 'uppercase',
-        color: 'var(--text-meta)',
-        lineHeight: 1.5,
-      }}>
-        {stat.label}
-      </p>
-    </motion.div>
-  );
-}
-
-/* ── Fact cell ──────────────────────────────────────────────── */
-function FactCell({ label, value }) {
-  const { ref, onMove, onLeave } = use3DTilt(6);
+/* ── Profile data cell ──────────────────────────────────────── */
+function DataCell({ label, value, highlight }) {
+  const { ref, onMove, onLeave } = use3DTilt(5);
   return (
     <div
-      ref={ref}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
+      ref={ref} onMouseMove={onMove} onMouseLeave={onLeave}
       className="glass"
-      style={{ padding: '1.25rem 1.1rem', cursor: 'default' }}
+      style={{
+        padding: '1.1rem 1.25rem',
+        cursor: 'default',
+        borderLeft: highlight ? '2px solid var(--p5)' : '2px solid transparent',
+        transition: 'border-color 0.3s',
+      }}
     >
       <p style={{
         fontFamily: 'var(--font-mono)',
         fontSize: 'var(--fs-2xs)',
-        letterSpacing: '0.2em',
+        letterSpacing: '0.18em',
         textTransform: 'uppercase',
         color: 'var(--text-4)',
-        marginBottom: '0.45rem',
+        marginBottom: '0.35rem',
       }}>
         {label}
       </p>
       <p style={{
-        color: 'var(--text-2)',
+        color: highlight ? 'var(--p7)' : 'var(--text-2)',
         fontSize: 'var(--fs-sm)',
         fontWeight: 500,
-        lineHeight: 1.4,
+        lineHeight: 1.35,
       }}>
         {value}
       </p>
@@ -149,113 +64,205 @@ function FactCell({ label, value }) {
   );
 }
 
+/* ── System status panel ────────────────────────────────────── */
+function StatusPanel() {
+  return (
+    <div style={{
+      border: '1px solid var(--border)',
+      padding: '1.5rem',
+      marginBottom: '2rem',
+    }}>
+      <div style={{
+        display: 'flex', alignItems: 'center',
+        justifyContent: 'space-between', flexWrap: 'wrap',
+        gap: '0.5rem', marginBottom: '1.25rem',
+      }}>
+        <span style={{
+          fontFamily: 'var(--font-mono)',
+          fontSize: 'var(--fs-xs)',
+          letterSpacing: '0.2em',
+          textTransform: 'uppercase',
+          color: 'var(--text-4)',
+        }}>
+          system.context
+        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+          <span style={{
+            width: '5px', height: '5px', borderRadius: '50%',
+            background: 'var(--p6)',
+            animation: 'live-pulse 2s ease-in-out infinite',
+            flexShrink: 0,
+          }} />
+          <span style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: 'var(--fs-xs)',
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            color: 'var(--p7)',
+          }}>
+            ACTIVE ENGAGEMENT
+          </span>
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+        {[
+          { label: 'Role',    value: 'Technology Consultant'  },
+          { label: 'Company', value: 'Convergenc3'            },
+          { label: 'Client',  value: 'Hollard Insurance',  highlight: true },
+          { label: 'Domain',  value: 'Enterprise Data Eng.'   },
+          { label: 'Study',   value: 'BComputing — 2026'      },
+          { label: 'Status',  value: 'Open to Opportunities', highlight: true },
+        ].map(d => <DataCell key={d.label} {...d} />)}
+      </div>
+    </div>
+  );
+}
+
 /* ── Section ────────────────────────────────────────────────── */
 export default function About() {
   return (
-    <section id="about" className="section-pad" style={{ borderTop: '1px solid var(--border)' }}>
-
-      <motion.div
-        initial="hidden" whileInView="visible"
-        viewport={{ once: true, amount: 0.04 }}
-        variants={stagger}
-        className="container-wide"
-      >
-        {/* Section marker */}
-        <motion.div variants={up} className="section-num" style={{ marginBottom: '3.5rem' }}>
-          01 / Profile
-        </motion.div>
-
-        {/* Oversized heading */}
-        <div style={{ overflow: 'hidden', marginBottom: '1.5rem' }}>
-          <motion.h2 variants={up} className="h-display">
-            I BUILD DATA
-          </motion.h2>
-        </div>
-        <div style={{ overflow: 'hidden', marginBottom: '5rem' }}>
-          <motion.h2
-            variants={up}
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontWeight: 800,
-              fontSize: 'clamp(2.8rem, 7vw, 8rem)',
-              lineHeight: 0.88,
-              letterSpacing: '-0.04em',
-              color: 'transparent',
-              WebkitTextStroke: '1px rgba(124,58,237,0.38)',
-            }}
-          >
-            SYSTEMS.
-          </motion.h2>
-        </div>
-
-        {/* Stat cards */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '1rem',
-          marginBottom: '5.5rem',
-        }}>
-          {STATS.map((s, i) => <StatCard key={s.label} stat={s} index={i} />)}
-        </div>
-      </motion.div>
-
-      {/* Marquee */}
-      <TextBand items={BAND_ITEMS} speed={30} direction={1} />
-
-      {/* Bio + facts */}
-      <div className="container-wide" style={{ paddingTop: '5rem' }}>
+    <section id="about" className="section-pad"
+      style={{ borderTop: '1px solid var(--border)' }}>
+      <div className="container-wide">
         <motion.div
           initial="hidden" whileInView="visible"
-          viewport={{ once: true, amount: 0.06 }}
+          viewport={{ once: true, amount: 0.04 }}
           variants={stagger}
         >
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '4rem' }}
-            className="lg:grid-cols-12">
 
-            {/* Bio */}
-            <motion.div variants={stagger} className="lg:col-span-7"
-              style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem' }}>
-              {[
-                'At Convergenc3, I\'m deployed into large enterprise environments — using SQL to query, validate and analyse data across multi-database systems for clients including Hollard Insurance. I work directly alongside the Head of Data on ongoing platform requirements.',
-                'Beyond client work, I\'ve built internal tooling from scratch: an AI-powered RAG document system that lets the company query its documentation in plain language, and a full employee onboarding platform used across the organisation.',
-                'I move between technical and business contexts naturally — translating stakeholder requirements into engineering execution, and raw data into working, maintained output.',
-              ].map((p, i) => (
-                <motion.p key={i} variants={up} style={{
-                  color: 'var(--text-3)',
-                  fontSize: 'var(--fs-md)',
-                  lineHeight: 1.88,
-                  fontWeight: 300,
-                }}>
-                  {p}
-                </motion.p>
-              ))}
-            </motion.div>
+          {/* Eyebrow */}
+          <motion.div variants={up}>
+            <span className="section-eyebrow">01 / Profile</span>
+          </motion.div>
 
-            {/* Fact grid */}
-            <motion.div variants={up} className="lg:col-span-5">
-              {/* Panel header */}
+          {/* Two-column grid: bio left, profile right */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr',
+            gap: 'clamp(3rem, 6vw, 6rem)',
+          }}
+            className="lg:grid-cols-12"
+          >
+            {/* ── LEFT: headline + bio ────────────────────── */}
+            <div className="lg:col-span-7"
+              style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+
+              {/* Large display heading */}
+              <div>
+                <motion.h2
+                  variants={up}
+                  style={{
+                    fontFamily: 'var(--font-sans)',
+                    fontWeight: 800,
+                    fontSize: 'clamp(2.2rem, 5.5vw, 5.5rem)',
+                    lineHeight: 0.9,
+                    letterSpacing: '-0.04em',
+                    color: 'var(--text)',
+                    marginBottom: '0.15em',
+                  }}
+                >
+                  Enterprise
+                </motion.h2>
+                <motion.h2
+                  variants={up}
+                  style={{
+                    fontFamily: 'var(--font-display), serif',
+                    fontWeight: 600,
+                    fontStyle: 'italic',
+                    fontSize: 'clamp(2.2rem, 5.5vw, 5.5rem)',
+                    lineHeight: 0.9,
+                    letterSpacing: '-0.02em',
+                    color: 'transparent',
+                    WebkitTextStroke: '1px rgba(139,92,246,0.5)',
+                  }}
+                >
+                  data engineering.
+                </motion.h2>
+              </div>
+
+              {/* Divider */}
+              <motion.div variants={up}>
+                <div style={{
+                  height: '1px',
+                  background: 'linear-gradient(to right, var(--border-2), transparent)',
+                }} />
+              </motion.div>
+
+              {/* Bio paragraphs */}
+              <motion.div variants={stagger}
+                style={{ display: 'flex', flexDirection: 'column', gap: '1.35rem' }}>
+                {[
+                  'Deployed into Hollard Insurance — one of South Africa\'s largest insurance groups — through Convergenc3, executing data engineering across multi-database enterprise systems and working directly alongside the Head of Data on ongoing platform delivery.',
+                  'Beyond client work, I build serious internal tooling from scratch: an AI-powered RAG document system for plain-language querying across company documentation, and a full employee onboarding platform deployed organisation-wide.',
+                  'I move between technical execution and business context — translating stakeholder requirements into working data systems, validating against live pipelines, and maintaining output across shifting priorities.',
+                ].map((p, i) => (
+                  <motion.p key={i} variants={up} style={{
+                    color: 'var(--text-3)',
+                    fontSize: 'var(--fs-md)',
+                    lineHeight: 1.85,
+                    fontWeight: 300,
+                  }}>
+                    {p}
+                  </motion.p>
+                ))}
+              </motion.div>
+            </div>
+
+            {/* ── RIGHT: profile panel ────────────────────── */}
+            <motion.div variants={up} className="lg:col-span-5"
+              style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
+              <StatusPanel />
+
+              {/* Capability summary */}
               <div style={{
-                display: 'flex', alignItems: 'center', gap: '0.75rem',
-                marginBottom: '1rem',
+                padding: '1.5rem',
+                border: '1px solid var(--border)',
               }}>
-                <div style={{ width: '2rem', height: '1px', background: 'rgba(124,58,237,0.4)' }} />
-                <span style={{
+                <p style={{
                   fontFamily: 'var(--font-mono)',
-                  fontSize: 'var(--fs-2xs)',
-                  letterSpacing: '0.25em',
+                  fontSize: 'var(--fs-xs)',
+                  letterSpacing: '0.2em',
                   textTransform: 'uppercase',
                   color: 'var(--text-4)',
+                  marginBottom: '1.1rem',
                 }}>
-                  Profile Data
-                </span>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
-                {FACTS.map(({ label, value }) => (
-                  <FactCell key={label} label={label} value={value} />
-                ))}
+                  core.capabilities
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+                  {[
+                    'SQL querying & data validation',
+                    'ETL pipeline design & automation',
+                    'Multi-database system integration',
+                    'RAG / semantic document retrieval',
+                    'Internal tooling & automation',
+                    'Full-stack application delivery',
+                  ].map((cap, i) => (
+                    <div key={i} style={{
+                      display: 'flex', alignItems: 'flex-start', gap: '0.65rem',
+                    }}>
+                      <span style={{
+                        width: '4px', height: '4px',
+                        background: 'var(--p5)',
+                        borderRadius: '50%',
+                        marginTop: '0.45em',
+                        flexShrink: 0,
+                      }} />
+                      <span style={{
+                        color: 'var(--text-3)',
+                        fontSize: 'var(--fs-sm)',
+                        fontWeight: 300,
+                        lineHeight: 1.5,
+                      }}>
+                        {cap}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </motion.div>
           </div>
+
         </motion.div>
       </div>
     </section>

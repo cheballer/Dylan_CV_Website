@@ -4,11 +4,11 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 const LINKS = [
-  { href: '#about',      label: 'About'    },
-  { href: '#experience', label: 'Exp.'     },
-  { href: '#projects',   label: 'Projects' },
-  { href: '#skills',     label: 'Skills'   },
-  { href: '#contact',    label: 'Contact'  },
+  { href: '#about',      label: 'About'      },
+  { href: '#experience', label: 'Experience' },
+  { href: '#projects',   label: 'Projects'   },
+  { href: '#skills',     label: 'Skills'     },
+  { href: '#contact',    label: 'Contact'    },
 ];
 
 export default function Nav() {
@@ -17,11 +17,10 @@ export default function Nav() {
 
   useEffect(() => {
     const onScroll = () => {
-      setScrolled(window.scrollY > 60);
-      // Active section via section midpoints
-      const ids = LINKS.map((l) => l.href.slice(1));
+      setScrolled(window.scrollY > 80);
+      const ids = LINKS.map(l => l.href.slice(1));
       let found = '';
-      ids.forEach((id) => {
+      ids.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
           const { top, bottom } = el.getBoundingClientRect();
@@ -41,84 +40,61 @@ export default function Nav() {
 
   return (
     <motion.header
-      initial={{ opacity: 0, y: -10 }}
+      initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: 0.15 }}
+      transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
       style={{
         position: 'fixed',
         top: 0, left: 0, right: 0,
         zIndex: 50,
-        background: scrolled ? 'rgba(5,5,8,0.85)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(20px) saturate(1.6)' : 'none',
-        WebkitBackdropFilter: scrolled ? 'blur(20px) saturate(1.6)' : 'none',
-        borderBottom: scrolled ? '1px solid rgba(124,58,237,0.14)' : '1px solid transparent',
-        boxShadow: scrolled ? '0 4px 40px rgba(0,0,0,0.4)' : 'none',
-        transition: 'background 0.4s, border-color 0.4s, box-shadow 0.4s',
+        background: scrolled ? 'rgba(6,6,11,0.88)' : 'transparent',
+        backdropFilter: scrolled ? 'blur(18px)' : 'none',
+        WebkitBackdropFilter: scrolled ? 'blur(18px)' : 'none',
+        borderBottom: scrolled ? '1px solid rgba(109,40,217,0.10)' : '1px solid transparent',
+        transition: 'background 0.5s, border-color 0.5s',
       }}
     >
       <div style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        height: '3.75rem',
+        height: '3.5rem',
         maxWidth: 'var(--max-w)',
         margin: '0 auto',
         padding: '0 var(--pad)',
       }}>
-        {/* ── Logo ─────────────────────────── */}
+
+        {/* Logo — initials, serif italic */}
         <a
           href="#hero"
-          onClick={(e) => go(e, '#hero')}
+          onClick={e => go(e, '#hero')}
           style={{
             fontFamily: 'var(--font-display)',
-            fontSize: '1.2rem',
-            fontWeight: 600,
+            fontSize: '1.15rem',
+            fontWeight: 700,
             fontStyle: 'italic',
-            letterSpacing: '-0.02em',
+            letterSpacing: '-0.01em',
             color: 'var(--text)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
           }}
         >
           DC
-          <motion.span
-            animate={{
-              boxShadow: [
-                '0 0 4px rgba(124,58,237,0.8)',
-                '0 0 14px rgba(139,92,246,1)',
-                '0 0 4px rgba(124,58,237,0.8)',
-              ],
-            }}
-            transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
-            style={{
-              width: '5px', height: '5px',
-              borderRadius: '50%',
-              background: 'var(--p4)',
-              display: 'inline-block',
-              flexShrink: 0,
-            }}
-          />
         </a>
 
-        {/* ── Links ────────────────────────── */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-          {LINKS.map(({ href, label }) => {
-            const isActive = active === href.slice(1);
-            return (
-              <a
-                key={href}
-                href={href}
-                onClick={(e) => go(e, href)}
-                className={`nav-link hidden md:block${isActive ? ' active' : ''}`}
-              >
-                {label}
-              </a>
-            );
-          })}
+        {/* Links */}
+        <nav aria-label="Primary" style={{ display: 'flex', alignItems: 'center', gap: '2.25rem' }}>
+          {LINKS.map(({ href, label }) => (
+            <a
+              key={href}
+              href={href}
+              onClick={e => go(e, href)}
+              className={`nav-link hidden md:block${active === href.slice(1) ? ' active' : ''}`}
+            >
+              {label}
+            </a>
+          ))}
         </nav>
 
-        {/* ── Resume ───────────────────────── */}
+        {/* Resume */}
         <a
           href="/cv.pdf"
           download
@@ -126,22 +102,20 @@ export default function Nav() {
           style={{
             fontFamily: 'var(--font-mono)',
             fontSize: 'var(--fs-xs)',
-            letterSpacing: '0.18em',
+            letterSpacing: '0.16em',
             textTransform: 'uppercase',
-            color: 'var(--p5)',
-            border: '1px solid rgba(124,58,237,0.30)',
-            padding: '0.4rem 1.1rem',
-            transition: 'background 0.2s, border-color 0.2s, box-shadow 0.2s',
+            color: 'var(--text-4)',
+            border: '1px solid var(--border-2)',
+            padding: '0.38rem 1.05rem',
+            transition: 'color 0.2s, border-color 0.2s',
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background    = 'rgba(124,58,237,0.12)';
-            e.currentTarget.style.borderColor   = 'rgba(124,58,237,0.55)';
-            e.currentTarget.style.boxShadow     = '0 0 20px rgba(124,58,237,0.22)';
+          onMouseEnter={e => {
+            e.currentTarget.style.color       = 'var(--p7)';
+            e.currentTarget.style.borderColor = 'var(--p5)';
           }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background    = 'transparent';
-            e.currentTarget.style.borderColor   = 'rgba(124,58,237,0.30)';
-            e.currentTarget.style.boxShadow     = 'none';
+          onMouseLeave={e => {
+            e.currentTarget.style.color       = 'var(--text-4)';
+            e.currentTarget.style.borderColor = 'var(--border-2)';
           }}
         >
           Resume ↓

@@ -17,21 +17,21 @@ export default function Page() {
   return (
     <>
       {/* ── Fixed ambient layers — back to front ─────────── */}
-      <GridBackground />    {/* z:0   — WebGL grid shader     */}
-      <GrainOverlay />      {/* z:9997— film grain texture    */}
+      <GridBackground />    {/* z:0   — grid shader / texture */}
+      <GrainOverlay />      {/* z:9997— film grain overlay    */}
       <CursorGlow />        {/* z:9998— mouse radial glow     */}
 
       {/* ── Global UI ────────────────────────────────────── */}
-      <ScrollProgress />    {/* slim top progress rail        */}
-      <SectionNav />        {/* floating right section dots   */}
+      <ScrollProgress />
+      <SectionNav />
 
       {/* ── Page content ─────────────────────────────────── */}
       <ClickSpark
-        sparkColor="rgba(124,58,237,0.85)"
-        sparkSize={5}
-        sparkRadius={16}
-        sparkCount={8}
-        duration={380}
+        sparkColor="rgba(109,40,217,0.8)"
+        sparkSize={4}
+        sparkRadius={14}
+        sparkCount={7}
+        duration={350}
       >
         <Nav />
         <main>
